@@ -5,8 +5,10 @@
 #include <thread>
 #include <mutex>
 
-const int window_width = 1280;
-const int window_height = 720;
+#include <RaylibException.hpp>
+
+const int window_width = 2300;
+const int window_height = 900;
 const char* window_title = "vissort";
 const int max_fps = 60;
 
@@ -23,7 +25,7 @@ int element_count = 640;
 
 int Max(const std::vector<Element>& vec)
 {
-	int max = 0;
+	int max = vec[0].value;
 	for (const auto& elem : vec)
 	{
 		if (elem.value > max)
@@ -34,14 +36,14 @@ int Max(const std::vector<Element>& vec)
 
 void DrawVec(const std::vector<Element>& vec)
 {
-	int scale_x = window_width / vec.size();
-	int scale_y = window_height / Max(vec);
-	for (std::size_t i = 0; i < vec.size(); i++)
+	float scale_x = GetScreenWidth() / (float)vec.size();
+	float scale_y = GetScreenHeight() / (float)Max(vec);
+	for (int i = 0; i < vec.size(); i++)
 	{
 		DrawRectangle(
-			0 + scale_x * i,
-			window_height - vec[i].value * scale_y,
-			scale_x,
+			scale_x * i,
+			GetScreenHeight() - vec[i].value * scale_y,
+			ceilf(scale_x),
 			vec[i].value * scale_y,
 			vec[i].color
 		);
@@ -126,10 +128,12 @@ void QuickSort(std::vector<Element>& vec, int low, int high)
 		QuickSort(vec, low, pi - 1);
 		QuickSort(vec, pi + 1, high);
 	}
+
 }
 
 int main()
 {
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(window_width, window_height, window_title);
 	SetTargetFPS(max_fps);
 	srand(time(NULL));
@@ -168,7 +172,7 @@ int main()
 		// Draw
 		BeginDrawing();
 		{
-			ClearBackground(BLACK);
+			ClearBackground(BLANK);
 			DrawVec(vec);
 			DrawFPS(20, 20);
 		}
