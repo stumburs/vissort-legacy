@@ -5,6 +5,8 @@
 #include <thread>
 #include <mutex>
 #include <atomic>
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"
 
 int window_width = 800;
 int window_height = 600;
@@ -21,7 +23,7 @@ bool started_thread = false;
 
 enum SortingAlgorithms
 {
-	BubbleSortEnum,
+	BubbleSortEnum = 0,
 	QuickSortEnum,
 	CombSortEnum,
 	ShellSortEnum,
@@ -370,7 +372,11 @@ int main()
 	element_count = GetScreenWidth();
 	SetTargetFPS(max_fps);
 	srand(time(NULL));
+	GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
 	//sound = LoadSound("sound.wav");
+
+	int active = 0;
+	bool edit_mode = false;
 
 	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSortEnum;
 
@@ -387,18 +393,27 @@ int main()
 		// Update
 		{
 
-			// Randomize data
-			if (IsKeyPressed(KEY_R) && !sorting_active)
-				RandomizeVec(vec);
+			// Flip data left to right
+			if (IsKeyPressed(KEY_LEFT) && !sorting_active)
+				std::reverse(vec.begin(), vec.end());
+		}
 
-			// Start/Stop sorting
-			if (IsKeyPressed(KEY_P))
+		// Draw
+		BeginDrawing();
+		{
+			ClearBackground(BLANK);
+			DrawVec(vec);
+			DrawFPS(20, 20);
+			//DrawActiveAlgorithmText(active_algorithm);
+
+			std::string sorting_text = sorting_active ? "Stop" : "Start";
+			if (GuiButton({ 20, 100, 100, 40 }, sorting_text.c_str()) && !edit_mode)
 			{
 				sorting_active = !sorting_active;
 				if (sorting_active)
 				{
 					std::thread th;
-					
+
 					if (active_algorithm == SortingAlgorithms::QuickSortEnum)
 						th = std::thread(QuickSort, std::ref(vec), 0, vec.size() - 1);
 					if (active_algorithm == SortingAlgorithms::BubbleSortEnum)
@@ -413,41 +428,19 @@ int main()
 						th = std::thread(ShellSort, std::ref(vec));
 
 					std::cout << "Thread started!\n";
-					
+
 					th.detach();
 				}
 			}
 
-			// Select sorting algorithm
-			if (IsKeyDown(KEY_LEFT_SHIFT))
+			if (GuiButton({ 20, 150, 100, 40 }, "Randomize") && !sorting_active && !edit_mode)
+				RandomizeVec(vec);
+
+			if (GuiDropdownBox({ 20, 50, 200, 40 }, "Bubble Sort;Quick Sort;Comb Sort; Shell Sort; Cocktail Sort; Gnome Sort", &active, edit_mode))
 			{
-				if (IsKeyPressed(KEY_B))
-					active_algorithm = SortingAlgorithms::BubbleSortEnum;
-				if (IsKeyPressed(KEY_Q))
-					active_algorithm = SortingAlgorithms::QuickSortEnum;
-				if (IsKeyPressed(KEY_S))
-					active_algorithm = SortingAlgorithms::ShellSortEnum;
-				if (IsKeyPressed(KEY_C))
-					active_algorithm = SortingAlgorithms::CombSortEnum;
-				if (IsKeyPressed(KEY_V))
-					active_algorithm = SortingAlgorithms::CocktailSortEnum;
-				if (IsKeyPressed(KEY_G))
-					active_algorithm = SortingAlgorithms::GnomeSortEnum;
+				edit_mode = !edit_mode;
+				active_algorithm = SortingAlgorithms(active);
 			}
-
-			// Flip data left to right
-			if (IsKeyPressed(KEY_LEFT))
-				std::reverse(vec.begin(), vec.end());
-		}
-
-		// Draw
-		BeginDrawing();
-		{
-			ClearBackground(BLANK);
-			DrawVec(vec);
-			DrawFPS(20, 20);
-			DrawActiveAlgorithmText(active_algorithm);
-			DrawText(sorting_active ? "Running" : "Stopped", 20, 60, 20, LIME);
 		}
 		EndDrawing();
 	}
