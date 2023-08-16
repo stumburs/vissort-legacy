@@ -4,8 +4,7 @@
 #include <algorithm>
 #include <thread>
 #include <mutex>
-
-#include <RaylibException.hpp>
+#include <atomic>
 
 int window_width = 800;
 int window_height = 600;
@@ -15,6 +14,20 @@ const int max_fps = 60;
 std::mutex mutex;
 
 //Sound sound;
+
+std::atomic<bool> sorting_active(false);
+bool started_thread = false;
+
+
+enum SortingAlgorithms
+{
+	BubbleSortEnum,
+	QuickSortEnum,
+	CombSortEnum,
+	ShellSortEnum,
+	CocktailSortEnum,
+	GnomeSortEnum
+};
 
 struct Element
 {
@@ -72,6 +85,11 @@ void BubbleSort(std::vector<Element>& vec)
 	bool swapped;
 	int n = vec.size();
 	for (i = 0; i < n - 1; i++) {
+
+		// Stop execution if sorting stopped
+		if (!sorting_active)
+			return;
+
 		swapped = false;
 		//SetSoundPitch(sound, (float)i / n + 0.5);
 		//PlaySound(sound);
@@ -125,6 +143,10 @@ void QuickSort(std::vector<Element>& vec, int low, int high)
 {
 	if (low < high) {
 
+		// Stop execution if sorting stopped
+		if (!sorting_active)
+			return;
+
 		// pi is partitioning index, arr[p]
 		// is now at right place
 		int pi = Partition(vec, low, high);
@@ -150,6 +172,11 @@ void ShellSort(std::vector<Element>& vec)
 		// gap sorted 
 		for (int i = gap; i < n; i += 1)
 		{
+
+			// Stop execution if sorting stopped
+			if (!sorting_active)
+				return;
+
 			// add a[i] to the elements that have been gap sorted
 			// save a[i] in temp and make a hole at position i
 			Element temp = vec[i];
@@ -196,6 +223,10 @@ void CombSort(std::vector<Element>& vec)
 	// iteration caused a swap
 	while (gap != 1 || swapped == true)
 	{
+
+		if (!sorting_active)
+			return;
+
 		// Find next gap
 		gap = getNextGap(gap);
 
@@ -225,6 +256,11 @@ void CocktailSort(std::vector<Element>& vec)
 	int end = n - 1;
 
 	while (swapped) {
+
+		// Stop execution if sorting stopped
+		if (!sorting_active)
+			return;
+
 		// reset the swapped flag on entering
 		// the loop, because it might be true from
 		// a previous iteration.
@@ -276,6 +312,11 @@ void GnomeSort(std::vector<Element>& vec)
 	int index = 0;
 
 	while (index < n) {
+
+		// Stop execution if sorting stopped
+		if (!sorting_active)
+			return;
+
 		if (index == 0)
 			index++;
 		if (vec[index].value >= vec[index - 1].value)
@@ -289,6 +330,37 @@ void GnomeSort(std::vector<Element>& vec)
 	return;
 }
 
+void DrawActiveAlgorithmText(SortingAlgorithms active_algorithm)
+{
+	std::string text;
+	switch (active_algorithm)
+	{
+	case SortingAlgorithms::BubbleSortEnum:
+		text = "Bubble Sort";
+		break;
+	case SortingAlgorithms::CocktailSortEnum:
+		text = "Cocktail Sort";
+		break;
+	case SortingAlgorithms::CombSortEnum:
+		text = "Comb Sort";
+		break;
+	case SortingAlgorithms::GnomeSortEnum:
+		text = "Gnome Sort";
+		break;
+	case SortingAlgorithms::QuickSortEnum:
+		text = "Quick Sort";
+		break;
+	case SortingAlgorithms::ShellSortEnum:
+		text = "Shell Sort";
+		break;
+	default:
+		text = "Unknown algorithm";
+		break;
+	}
+
+	DrawText(text.c_str(), 20, 40, 20, LIME);
+}
+
 int main()
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -300,6 +372,7 @@ int main()
 	srand(time(NULL));
 	//sound = LoadSound("sound.wav");
 
+	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSortEnum;
 
 	for (int i = 1; i < element_count + 1; i++)
 	{
@@ -313,41 +386,56 @@ int main()
 	{
 		// Update
 		{
-			if (IsKeyPressed(KEY_R))
+
+			// Randomize data
+			if (IsKeyPressed(KEY_R) && !sorting_active)
 				RandomizeVec(vec);
-			if (IsKeyDown(KEY_LEFT_SHIFT))
+
+			// Start/Stop sorting
+			if (IsKeyPressed(KEY_P))
 			{
-				if (IsKeyPressed(KEY_B))
+				sorting_active = !sorting_active;
+				if (sorting_active)
 				{
-					std::thread th(BubbleSort, std::ref(vec));
-					th.detach();
-				}
-				if (IsKeyPressed(KEY_Q))
-				{
-					std::thread th(QuickSort, std::ref(vec), 0, vec.size() - 1);
-					th.detach();
-				}
-				if (IsKeyPressed(KEY_S))
-				{
-					std::thread th(ShellSort, std::ref(vec));
-					th.detach();
-				}
-				if (IsKeyPressed(KEY_C))
-				{
-					std::thread th(CombSort, std::ref(vec));
-					th.detach();
-				}
-				if (IsKeyPressed(KEY_V))
-				{
-					std::thread th(CocktailSort, std::ref(vec));
-					th.detach();
-				}
-				if (IsKeyPressed(KEY_G))
-				{
-					std::thread th(GnomeSort, std::ref(vec));
+					std::thread th;
+					
+					if (active_algorithm == SortingAlgorithms::QuickSortEnum)
+						th = std::thread(QuickSort, std::ref(vec), 0, vec.size() - 1);
+					if (active_algorithm == SortingAlgorithms::BubbleSortEnum)
+						th = std::thread(BubbleSort, std::ref(vec));
+					if (active_algorithm == SortingAlgorithms::CocktailSortEnum)
+						th = std::thread(CocktailSort, std::ref(vec));
+					if (active_algorithm == SortingAlgorithms::CombSortEnum)
+						th = std::thread(CombSort, std::ref(vec));
+					if (active_algorithm == SortingAlgorithms::GnomeSortEnum)
+						th = std::thread(GnomeSort, std::ref(vec));
+					if (active_algorithm == SortingAlgorithms::ShellSortEnum)
+						th = std::thread(ShellSort, std::ref(vec));
+
+					std::cout << "Thread started!\n";
+					
 					th.detach();
 				}
 			}
+
+			// Select sorting algorithm
+			if (IsKeyDown(KEY_LEFT_SHIFT))
+			{
+				if (IsKeyPressed(KEY_B))
+					active_algorithm = SortingAlgorithms::BubbleSortEnum;
+				if (IsKeyPressed(KEY_Q))
+					active_algorithm = SortingAlgorithms::QuickSortEnum;
+				if (IsKeyPressed(KEY_S))
+					active_algorithm = SortingAlgorithms::ShellSortEnum;
+				if (IsKeyPressed(KEY_C))
+					active_algorithm = SortingAlgorithms::CombSortEnum;
+				if (IsKeyPressed(KEY_V))
+					active_algorithm = SortingAlgorithms::CocktailSortEnum;
+				if (IsKeyPressed(KEY_G))
+					active_algorithm = SortingAlgorithms::GnomeSortEnum;
+			}
+
+			// Flip data left to right
 			if (IsKeyPressed(KEY_LEFT))
 				std::reverse(vec.begin(), vec.end());
 		}
@@ -358,6 +446,8 @@ int main()
 			ClearBackground(BLANK);
 			DrawVec(vec);
 			DrawFPS(20, 20);
+			DrawActiveAlgorithmText(active_algorithm);
+			DrawText(sorting_active ? "Running" : "Stopped", 20, 60, 20, LIME);
 		}
 		EndDrawing();
 	}
