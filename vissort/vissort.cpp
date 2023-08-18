@@ -501,6 +501,7 @@ int main()
 
 	InitVector(GetScreenWidth());
 
+	bool settings_open = false;
 	int active = 0;
 	bool dropdown_edit_mode = false;
 	int new_vec_size = vec.size();
@@ -524,74 +525,80 @@ int main()
 			ClearBackground({ 40, 44, 52, 255 });
 			DrawVec(vec);
 
-			//if (CheckCollisionPointRec(GetMousePosition(), { 20, 20, 200, 300 }))
-			//{
+			if (GuiButton({ 20, 20, 40, 40 }, ""))
+				settings_open = !settings_open;
+			if (CheckCollisionPointRec(GetMousePosition(), { 20, 20, 40, 40 }))
+				GuiDrawIcon(GuiIconName::ICON_GEAR, 24, 24, 2, { 229, 192, 123, 255 });
+			else
+				GuiDrawIcon(GuiIconName::ICON_GEAR, 24, 24, 2, { 171, 178, 191, 255 });
 
-			if (!dropdown_edit_mode)
+			if (settings_open)
 			{
-				if (GuiButton({ 20, 120, 120, 40 }, "Randomize") && !sorting_active)
-					RandomizeVec(vec);
+				if (!dropdown_edit_mode)
+				{
+					if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorting_active)
+						RandomizeVec(vec);
 
-				std::string sorting_text = sorting_active ? "Stop" : "Start";
-				if (sorting_active)
-				{
-					GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 224, 108, 117, 255 }));
-					GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 224, 108, 117, 255 }));
-					GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 190, 80, 70, 255 }));
-					GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 190, 80, 70, 255 }));
-				}
-				if (GuiButton({ 20, 70, 120, 40 }, sorting_text.c_str()))
-				{
-					sorting_active = !sorting_active;
+					std::string sorting_text = sorting_active ? "Stop" : "Start";
 					if (sorting_active)
 					{
-						std::thread th;
-
-						if (active_algorithm == SortingAlgorithms::QuickSortEnum)
-							th = std::thread(QuickSort, std::ref(vec), 0, vec.size() - 1);
-						if (active_algorithm == SortingAlgorithms::BubbleSortEnum)
-							th = std::thread(BubbleSort, std::ref(vec));
-						if (active_algorithm == SortingAlgorithms::CocktailSortEnum)
-							th = std::thread(CocktailSort, std::ref(vec));
-						if (active_algorithm == SortingAlgorithms::CombSortEnum)
-							th = std::thread(CombSort, std::ref(vec));
-						if (active_algorithm == SortingAlgorithms::GnomeSortEnum)
-							th = std::thread(GnomeSort, std::ref(vec));
-						if (active_algorithm == SortingAlgorithms::ShellSortEnum)
-							th = std::thread(ShellSort, std::ref(vec));
-						if (active_algorithm == SortingAlgorithms::CycleSortEnum)
-							th = std::thread(CycleSort, std::ref(vec));
-
-						std::cout << "Thread started!\n";
-
-						th.detach();
+						GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 224, 108, 117, 255 }));
+						GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 224, 108, 117, 255 }));
+						GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 190, 80, 70, 255 }));
+						GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 190, 80, 70, 255 }));
 					}
+					if (GuiButton({ 20, 120, 120, 40 }, sorting_text.c_str()))
+					{
+						sorting_active = !sorting_active;
+						if (sorting_active)
+						{
+							std::thread th;
+
+							if (active_algorithm == SortingAlgorithms::QuickSortEnum)
+								th = std::thread(QuickSort, std::ref(vec), 0, vec.size() - 1);
+							if (active_algorithm == SortingAlgorithms::BubbleSortEnum)
+								th = std::thread(BubbleSort, std::ref(vec));
+							if (active_algorithm == SortingAlgorithms::CocktailSortEnum)
+								th = std::thread(CocktailSort, std::ref(vec));
+							if (active_algorithm == SortingAlgorithms::CombSortEnum)
+								th = std::thread(CombSort, std::ref(vec));
+							if (active_algorithm == SortingAlgorithms::GnomeSortEnum)
+								th = std::thread(GnomeSort, std::ref(vec));
+							if (active_algorithm == SortingAlgorithms::ShellSortEnum)
+								th = std::thread(ShellSort, std::ref(vec));
+							if (active_algorithm == SortingAlgorithms::CycleSortEnum)
+								th = std::thread(CycleSort, std::ref(vec));
+
+							std::cout << "Thread started!\n";
+
+							th.detach();
+						}
+					}
+					GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
+					GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 229, 192, 123, 255 }));
+					GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
+					GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 209, 154, 102, 255 }));
+
+					if (GuiButton({ 20, 270, 120, 40 }, "Apply") && !sorting_active)
+						InitVector(new_vec_size);
+
+					if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorting_active)
+						RandomizeVec(vec);
+
+					new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
 				}
-				GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
-				GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 229, 192, 123, 255 }));
-				GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
-				GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 209, 154, 102, 255 }));
 
-				if (GuiButton({ 20, 220, 120, 40 }, "Apply") && !sorting_active)
-					InitVector(new_vec_size);
-
-				if (GuiButton({ 20, 120, 120, 40 }, "Randomize") && !sorting_active)
-					RandomizeVec(vec);
-
-				new_vec_size = (int)GuiSlider({ 20, 170, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
+				if (GuiDropdownBox({ 20, 70, 200, 40 }, "Bubble Sort;Quick Sort;Comb Sort;Shell Sort;Cocktail Sort;Gnome Sort;Cycle Sort", &active, dropdown_edit_mode))
+				{
+					dropdown_edit_mode = !dropdown_edit_mode;
+					active_algorithm = SortingAlgorithms(active);
+				}
+				//}
+				//else
+				//{
+				//	DrawRectangle(20, 20, 40, 40, { 76, 82, 99, 255 });
+				//	dropdown_edit_mode = false;
 			}
-
-			if (GuiDropdownBox({ 20, 20, 200, 40 }, "Bubble Sort;Quick Sort;Comb Sort;Shell Sort;Cocktail Sort;Gnome Sort;Cycle Sort", &active, dropdown_edit_mode))
-			{
-				dropdown_edit_mode = !dropdown_edit_mode;
-				active_algorithm = SortingAlgorithms(active);
-			}
-			//}
-			//else
-			//{
-			//	DrawRectangle(20, 20, 40, 40, { 76, 82, 99, 255 });
-			//	dropdown_edit_mode = false;
-			//}
 
 		}
 		EndDrawing();
