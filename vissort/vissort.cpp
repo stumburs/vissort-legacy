@@ -65,7 +65,7 @@ void DrawVec(const std::vector<Element>& vec)
 			scale_x * i,
 			GetScreenHeight() - vec[i].value * scale_y,
 			ceilf(scale_x),
-			vec[i].value * scale_y,
+			vec[i].value * scale_y + 1,
 			vec[i].color
 		);
 	}
