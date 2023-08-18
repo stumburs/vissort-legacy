@@ -7,6 +7,7 @@
 #include <atomic>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
+#include <stack>
 
 int window_width = 800;
 int window_height = 600;
@@ -14,6 +15,8 @@ const char* window_title = "vissort";
 const int max_fps = 60;
 
 std::mutex mutex;
+
+std::stack<int> quick_sort_finished;
 
 //Sound sound;
 
@@ -145,11 +148,20 @@ int Partition(std::vector<Element>& vec, int low, int high)
 // high --> Ending index
 void QuickSort(std::vector<Element>& vec, int low, int high)
 {
+	mutex.lock();
+	quick_sort_finished.push(1);
+	mutex.unlock();
+
 	if (low < high) {
 
 		// Stop execution if sorting stopped
 		if (!sorting_active)
+		{
+			mutex.lock();
+			quick_sort_finished.pop();
+			mutex.unlock();
 			return;
+		}
 
 		// pi is partitioning index, arr[p]
 		// is now at right place
@@ -160,6 +172,13 @@ void QuickSort(std::vector<Element>& vec, int low, int high)
 		QuickSort(vec, low, pi - 1);
 		QuickSort(vec, pi + 1, high);
 	}
+
+	mutex.lock();
+	quick_sort_finished.pop();
+	mutex.unlock();
+
+	if (quick_sort_finished.size() == 0)
+		sorting_active = false;
 }
 
 
