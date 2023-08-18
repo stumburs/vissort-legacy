@@ -28,7 +28,8 @@ enum SortingAlgorithms
 	CombSortEnum,
 	ShellSortEnum,
 	CocktailSortEnum,
-	GnomeSortEnum
+	GnomeSortEnum,
+	CycleSortEnum
 };
 
 struct Element
@@ -109,6 +110,7 @@ void BubbleSort(std::vector<Element>& vec)
 		if (swapped == false)
 			break;
 	}
+	sorting_active = false;
 }
 
 // Quicksort
@@ -158,7 +160,6 @@ void QuickSort(std::vector<Element>& vec, int low, int high)
 		QuickSort(vec, low, pi - 1);
 		QuickSort(vec, pi + 1, high);
 	}
-
 }
 
 
@@ -196,6 +197,7 @@ void ShellSort(std::vector<Element>& vec)
 			vec[j] = temp;
 		}
 	}
+	sorting_active = false;
 }
 
 // Comb sort
@@ -247,6 +249,7 @@ void CombSort(std::vector<Element>& vec)
 			}
 		}
 	}
+	sorting_active = false;
 }
 
 // Cocktail sort
@@ -305,6 +308,7 @@ void CocktailSort(std::vector<Element>& vec)
 		// smallest number to its rightful spot.
 		++start;
 	}
+	sorting_active = false;
 }
 
 // A function to sort the algorithm using gnome sort
@@ -329,7 +333,77 @@ void GnomeSort(std::vector<Element>& vec)
 		}
 		WaitTime(0.0001);
 	}
-	return;
+	sorting_active = false;
+
+}
+
+// Function sort the array using Cycle sort
+void CycleSort(std::vector<Element>& vec)
+{
+	int n = vec.size();
+	// count number of memory writes
+	int writes = 0;
+
+	// traverse array elements and put it to on
+	// the right place
+	for (int cycle_start = 0; cycle_start <= n - 2; cycle_start++) {
+		// initialize item as starting point
+		Element item = vec[cycle_start];
+
+		// Find position where we put the item. We basically
+		// count all smaller elements on right side of item.
+		int pos = cycle_start;
+		for (int i = cycle_start + 1; i < n; i++)
+			if (vec[i].value < item.value)
+				pos++;
+
+		// If item is already in correct position
+		if (pos == cycle_start)
+			continue;
+
+		// ignore all duplicate  elements
+		while (item.value == vec[pos].value)
+			pos += 1;
+
+		// put the item to it's right position
+		if (pos != cycle_start) {
+			Swap(&item, &vec[pos]);
+			writes++;
+		}
+
+		// Rotate rest of the cycle
+		while (pos != cycle_start) {
+			pos = cycle_start;
+
+			WaitTime(0.005);
+
+			// Stop execution if sorting stopped
+			if (!sorting_active)
+				return;
+
+			// Find position where we put the element
+			for (int i = cycle_start + 1; i < n; i++)
+			{
+
+				if (vec[i].value < item.value)
+					pos += 1;
+			}
+
+			// ignore all duplicate  elements
+			while (item.value == vec[pos].value)
+				pos += 1;
+
+			// put the item to it's right position
+			if (item.value != vec[pos].value) {
+				Swap(&item, &vec[pos]);
+				writes++;
+			}
+		}
+	}
+
+	// Number of memory writes or swaps
+	// cout << writes << endl ;
+	sorting_active = false;
 }
 
 void DrawActiveAlgorithmText(SortingAlgorithms active_algorithm)
@@ -355,6 +429,9 @@ void DrawActiveAlgorithmText(SortingAlgorithms active_algorithm)
 	case SortingAlgorithms::ShellSortEnum:
 		text = "Shell Sort";
 		break;
+	case SortingAlgorithms::CycleSortEnum:
+		text = "Cycle Sort";
+		break;
 	default:
 		text = "Unknown algorithm";
 		break;
@@ -363,30 +440,54 @@ void DrawActiveAlgorithmText(SortingAlgorithms active_algorithm)
 	DrawText(text.c_str(), 20, 40, 20, LIME);
 }
 
+void InitVector(int size)
+{
+	vec.clear();
+	for (int i = 1; i < size + 1; i++)
+	{
+		Element elem{};
+		elem.value = i;
+		elem.color = ColorFromHSV((float)i / size * 360.0f, 0.3f, 1.0f);
+		vec.push_back(elem);
+	}
+}
+
 int main()
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(window_width, window_height, window_title);
 	InitAudioDevice();
 	SetWindowSize(GetMonitorWidth(0) / 2, GetMonitorHeight(0) / 2);
-	element_count = GetScreenWidth();
 	SetTargetFPS(max_fps);
 	srand(time(NULL));
 	GuiSetStyle(DEFAULT, TEXT_SIZE, 20);
+
+	// Background
+	GuiSetStyle(DEFAULT, BASE_COLOR_NORMAL, ColorToInt({ 76, 82, 99, 255 }));
+	GuiSetStyle(DEFAULT, BASE_COLOR_FOCUSED, ColorToInt({ 92, 99, 112, 255 }));
+	GuiSetStyle(DEFAULT, BASE_COLOR_PRESSED, ColorToInt({ 108, 116, 125, 255 }));
+	GuiSetStyle(DEFAULT, BACKGROUND_COLOR, ColorToInt({ 76, 82, 99, 255 }));
+
+	// Text
+	GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
+	GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 229, 192, 123, 255 }));
+	GuiSetStyle(DEFAULT, TEXT_COLOR_PRESSED, ColorToInt({ 229, 192, 123, 255 }));
+
+	// Border
+	GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
+	GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 209, 154, 102, 255 }));
+	GuiSetStyle(DEFAULT, BORDER_COLOR_PRESSED, ColorToInt({ 209, 154, 102, 255 }));
+
 	//sound = LoadSound("sound.wav");
 
+	InitVector(GetScreenWidth());
+
 	int active = 0;
-	bool edit_mode = false;
+	bool dropdown_edit_mode = false;
+	int new_vec_size = vec.size();
 
 	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSortEnum;
 
-	for (int i = 1; i < element_count + 1; i++)
-	{
-		Element elem{};
-		elem.value = i;
-		elem.color = ColorFromHSV((float)i / element_count * 360.0f, 0.3f, 1.0f);
-		vec.push_back(elem);
-	}
 
 	while (!WindowShouldClose())
 	{
@@ -401,46 +502,78 @@ int main()
 		// Draw
 		BeginDrawing();
 		{
-			ClearBackground(BLANK);
+			ClearBackground({ 40, 44, 52, 255 });
 			DrawVec(vec);
-			DrawFPS(20, 20);
-			//DrawActiveAlgorithmText(active_algorithm);
 
-			std::string sorting_text = sorting_active ? "Stop" : "Start";
-			if (GuiButton({ 20, 100, 100, 40 }, sorting_text.c_str()) && !edit_mode)
+			//if (CheckCollisionPointRec(GetMousePosition(), { 20, 20, 200, 300 }))
+			//{
+
+			if (!dropdown_edit_mode)
 			{
-				sorting_active = !sorting_active;
+				if (GuiButton({ 20, 120, 120, 40 }, "Randomize") && !sorting_active)
+					RandomizeVec(vec);
+
+				std::string sorting_text = sorting_active ? "Stop" : "Start";
 				if (sorting_active)
 				{
-					std::thread th;
-
-					if (active_algorithm == SortingAlgorithms::QuickSortEnum)
-						th = std::thread(QuickSort, std::ref(vec), 0, vec.size() - 1);
-					if (active_algorithm == SortingAlgorithms::BubbleSortEnum)
-						th = std::thread(BubbleSort, std::ref(vec));
-					if (active_algorithm == SortingAlgorithms::CocktailSortEnum)
-						th = std::thread(CocktailSort, std::ref(vec));
-					if (active_algorithm == SortingAlgorithms::CombSortEnum)
-						th = std::thread(CombSort, std::ref(vec));
-					if (active_algorithm == SortingAlgorithms::GnomeSortEnum)
-						th = std::thread(GnomeSort, std::ref(vec));
-					if (active_algorithm == SortingAlgorithms::ShellSortEnum)
-						th = std::thread(ShellSort, std::ref(vec));
-
-					std::cout << "Thread started!\n";
-
-					th.detach();
+					GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 224, 108, 117, 255 }));
+					GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 224, 108, 117, 255 }));
+					GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 190, 80, 70, 255 }));
+					GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 190, 80, 70, 255 }));
 				}
+				if (GuiButton({ 20, 70, 120, 40 }, sorting_text.c_str()))
+				{
+					sorting_active = !sorting_active;
+					if (sorting_active)
+					{
+						std::thread th;
+
+						if (active_algorithm == SortingAlgorithms::QuickSortEnum)
+							th = std::thread(QuickSort, std::ref(vec), 0, vec.size() - 1);
+						if (active_algorithm == SortingAlgorithms::BubbleSortEnum)
+							th = std::thread(BubbleSort, std::ref(vec));
+						if (active_algorithm == SortingAlgorithms::CocktailSortEnum)
+							th = std::thread(CocktailSort, std::ref(vec));
+						if (active_algorithm == SortingAlgorithms::CombSortEnum)
+							th = std::thread(CombSort, std::ref(vec));
+						if (active_algorithm == SortingAlgorithms::GnomeSortEnum)
+							th = std::thread(GnomeSort, std::ref(vec));
+						if (active_algorithm == SortingAlgorithms::ShellSortEnum)
+							th = std::thread(ShellSort, std::ref(vec));
+						if (active_algorithm == SortingAlgorithms::CycleSortEnum)
+							th = std::thread(CycleSort, std::ref(vec));
+
+						std::cout << "Thread started!\n";
+
+						th.detach();
+					}
+				}
+				GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
+				GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 229, 192, 123, 255 }));
+				GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
+				GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 209, 154, 102, 255 }));
+
+				if (GuiButton({ 20, 220, 120, 40 }, "Apply") && !sorting_active)
+					InitVector(new_vec_size);
+
+				if (GuiButton({ 20, 120, 120, 40 }, "Randomize") && !sorting_active)
+					RandomizeVec(vec);
+
+				new_vec_size = (int)GuiSlider({ 20, 170, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
 			}
 
-			if (GuiButton({ 20, 150, 100, 40 }, "Randomize") && !sorting_active && !edit_mode)
-				RandomizeVec(vec);
-
-			if (GuiDropdownBox({ 20, 50, 200, 40 }, "Bubble Sort;Quick Sort;Comb Sort; Shell Sort; Cocktail Sort; Gnome Sort", &active, edit_mode))
+			if (GuiDropdownBox({ 20, 20, 200, 40 }, "Bubble Sort;Quick Sort;Comb Sort;Shell Sort;Cocktail Sort;Gnome Sort;Cycle Sort", &active, dropdown_edit_mode))
 			{
-				edit_mode = !edit_mode;
+				dropdown_edit_mode = !dropdown_edit_mode;
 				active_algorithm = SortingAlgorithms(active);
 			}
+			//}
+			//else
+			//{
+			//	DrawRectangle(20, 20, 40, 40, { 76, 82, 99, 255 });
+			//	dropdown_edit_mode = false;
+			//}
+
 		}
 		EndDrawing();
 	}
