@@ -129,13 +129,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="DataGenerator.cpp" />
+    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="Sorter.cpp" />
     <ClCompile Include="vissort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App.h" />
+    <ClInclude Include="DataGenerator.h" />
+    <ClInclude Include="Element.h" />
     <ClInclude Include="raygui.h" />
+    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="Sorter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
