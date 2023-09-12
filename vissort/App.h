@@ -1,5 +1,5 @@
 #pragma once
-#include "Renderer.h"
+#include "GUI.h"
 #include "Sorter.h"
 #include "Element.h"
 #include "DataGenerator.h"
@@ -14,6 +14,6 @@ public:
 private:
 	Sorter sorter;
 	DataGenerator data_generator;
-	Renderer renderer;
+	GUI gui;
 };
 

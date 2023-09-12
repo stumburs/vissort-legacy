@@ -4,10 +4,10 @@
 #include "Sorter.h"
 #include "DataGenerator.h"
 
-class Renderer
+class GUI
 {
 public:
-	Renderer(Sorter& sorter, DataGenerator& data_generator);
+	GUI(Sorter& sorter, DataGenerator& data_generator);
 	void Render();
 private:
 	Sorter& sorter;

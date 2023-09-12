@@ -1,11 +1,11 @@
-#include "Renderer.h"
+#include "GUI.h"
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
 #include <thread>
 #include <iostream>
 
-Renderer::Renderer(Sorter& sorter, DataGenerator& data_generator) : sorter(sorter), data_generator(data_generator)
+GUI::GUI(Sorter& sorter, DataGenerator& data_generator) : sorter(sorter), data_generator(data_generator)
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(800, 600, "vissort");
@@ -31,7 +31,7 @@ Renderer::Renderer(Sorter& sorter, DataGenerator& data_generator) : sorter(sorte
 	GuiSetStyle(DEFAULT, BORDER_COLOR_PRESSED, ColorToInt({ 209, 154, 102, 255 }));
 }
 
-void Renderer::Render()
+void GUI::Render()
 {
 	// Draw
 	BeginDrawing();
@@ -92,7 +92,7 @@ void Renderer::Render()
 	EndDrawing();
 }
 
-void Renderer::DrawData(const std::vector<Element>& vec)
+void GUI::DrawData(const std::vector<Element>& vec)
 {
 	// Find largest element in vec
 	int max = vec.begin()->value;

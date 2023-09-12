@@ -131,7 +131,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="DataGenerator.cpp" />
-    <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Sorter.cpp" />
     <ClCompile Include="vissort.cpp" />
   </ItemGroup>
@@ -143,7 +143,7 @@
     <ClInclude Include="DataGenerator.h" />
     <ClInclude Include="Element.h" />
     <ClInclude Include="raygui.h" />
-    <ClInclude Include="Renderer.h" />
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Sorter.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
