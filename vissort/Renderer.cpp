@@ -2,7 +2,7 @@
 #include <raylib.h>
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"
-
+#include <thread>
 #include <iostream>
 
 Renderer::Renderer(Sorter& sorter, DataGenerator& data_generator) : sorter(sorter), data_generator(data_generator)
@@ -51,11 +51,8 @@ void Renderer::Render()
 		{
 			if (!dropdown_edit_mode)
 			{
-				//if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorting_active)
-				//	data_generator.Randomize(sorter.GetData());
-
-				std::string sorting_text = sorting_active ? "Stop" : "Start";
-				if (sorting_active)
+				std::string sorting_text = sorter.GetSortingActive() ? "Stop" : "Start";
+				if (sorter.GetSortingActive())
 				{
 					GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 224, 108, 117, 255 }));
 					GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 224, 108, 117, 255 }));
@@ -64,30 +61,10 @@ void Renderer::Render()
 				}
 				if (GuiButton({ 20, 120, 120, 40 }, sorting_text.c_str()))
 				{
-					sorting_active = !sorting_active;
-					if (sorting_active)
+					if (!sorter.GetSortingActive())
 					{
-
-						//std::thread th;
-
-						//if (active_algorithm == SortingAlgorithms::QuickSortEnum)
-						//	th = std::thread(QuickSort, std::ref(vec), 0, vec.size() - 1);
-						//if (active_algorithm == SortingAlgorithms::BubbleSortEnum)
-						//	th = std::thread(BubbleSort, std::ref(vec));
-						//if (active_algorithm == SortingAlgorithms::CocktailSortEnum)
-						//	th = std::thread(CocktailSort, std::ref(vec));
-						//if (active_algorithm == SortingAlgorithms::CombSortEnum)
-						//	th = std::thread(CombSort, std::ref(vec));
-						//if (active_algorithm == SortingAlgorithms::GnomeSortEnum)
-						//	th = std::thread(GnomeSort, std::ref(vec));
-						//if (active_algorithm == SortingAlgorithms::ShellSortEnum)
-						//	th = std::thread(ShellSort, std::ref(vec));
-						//if (active_algorithm == SortingAlgorithms::CycleSortEnum)
-						//	th = std::thread(CycleSort, std::ref(vec));
-
+						sorter.StartThread();
 						std::cout << "Thread started!\n";
-
-						//th.detach();
 					}
 				}
 				GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
@@ -95,27 +72,20 @@ void Renderer::Render()
 				GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
 				GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 209, 154, 102, 255 }));
 
-				if (GuiButton({ 20, 270, 120, 40 }, "Apply") && !sorting_active)
+				if (GuiButton({ 20, 270, 120, 40 }, "Apply") && !sorter.GetSortingActive())
 					sorter.InitVector(new_vec_size);
 
-				if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorting_active)
+				if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorter.GetSortingActive())
 					data_generator.Randomize(sorter.GetData());
 
 				new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
 			}
-
-			// DrawText(sorter.SortingEnumToString().c_str(), 20, 40, 20, LIME);
 
 			if (GuiDropdownBox({ 20, 70, 200, 40 }, "Bubble Sort;Quick Sort;Comb Sort;Shell Sort;Cocktail Sort;Gnome Sort;Cycle Sort", &active, dropdown_edit_mode))
 			{
 				dropdown_edit_mode = !dropdown_edit_mode;
 				sorter.SetActiveAlgorithm(Sorter::SortingAlgorithms(active));
 			}
-		}
-		else
-		{
-			DrawRectangle(20, 20, 40, 40, { 76, 82, 99, 255 });
-			dropdown_edit_mode = false;
 		}
 
 	}

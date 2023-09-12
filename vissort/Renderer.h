@@ -15,12 +15,9 @@ private:
 
 	void DrawData(const std::vector<Element>& vec);
 
-
-
 	bool settings_open = false;
 	int active = 0;
 	bool dropdown_edit_mode = false;
 	int new_vec_size = 100;
-	bool sorting_active = false;
 };
 

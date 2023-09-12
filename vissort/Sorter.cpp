@@ -1,4 +1,6 @@
 #include "Sorter.h"
+#include <thread>
+#include <stdexcept>
 
 Sorter::Sorter()
 {
@@ -244,6 +246,120 @@ void Sorter::CycleSort()
 	//sorting_active = false;
 }
 
+int Sorter::Partition(int low, int high)
+{
+	// Choosing the pivot
+	int pivot = data[high].value;
+
+	// Index of smaller element and indicates
+	// the right position of pivot found so far
+	int i = (low - 1);
+
+	for (int j = low; j <= high - 1; j++) {
+		//SetSoundPitch(sound, (float)j / high + 0.2);
+		//PlaySound(sound);
+		WaitTime(0.001);
+		// If current element is smaller than the pivot
+		if (data[j].value < pivot) {
+
+			// Increment index of smaller element
+			i++;
+			std::swap(data[i], data[j]);
+		}
+	}
+	std::swap(data[i + 1], data[high]);
+	return (i + 1);
+}
+
+void Sorter::QuickSort(int low, int high)
+{
+	//mutex.lock();
+	//quick_sort_finished.push(1);
+	//mutex.unlock();
+
+	if (low < high) {
+
+		// Stop execution if sorting stopped
+		/*if (!sorting_active)
+		{
+			mutex.lock();
+			quick_sort_finished.pop();
+			mutex.unlock();
+			return;
+		}*/
+
+		// pi is partitioning index, arr[p]
+		// is now at right place
+		int pi = Partition(low, high);
+
+		// Separately sort elements before
+		// partition and after partition
+		QuickSort(low, pi - 1);
+		QuickSort(pi + 1, high);
+	}
+
+	//mutex.lock();
+	//quick_sort_finished.pop();
+	//mutex.unlock();
+
+	//if (quick_sort_finished.size() == 0)
+	//	sorting_active = false;
+}
+
+int Sorter::GetNextGap(int gap)
+{
+	// Shrink gap by Shrink factor
+	gap = (gap * 10) / 13;
+
+	if (gap < 1)
+		return 1;
+	return gap;
+}
+
+void Sorter::CombSort()
+{
+	// Initialize gap
+	int n = data.size();
+	int gap = n;
+
+	// Initialize swapped as true to make sure that
+	// loop runs
+	bool swapped = true;
+
+	// Keep running while gap is more than 1 and last
+	// iteration caused a swap
+	while (gap != 1 || swapped == true)
+	{
+
+		//if (!sorting_active)
+		//	return;
+
+		// Find next gap
+		gap = GetNextGap(gap);
+
+		// Initialize swapped as false so that we can
+		// check if swap happened or not
+		swapped = false;
+
+		// Compare all elements with current gap
+		for (int i = 0; i < n - gap; i++)
+		{
+			if (data[i].value > data[i + gap].value)
+			{
+				WaitTime(0.001);
+				std::swap(data[i], data[i + gap]);
+				swapped = true;
+			}
+		}
+	}
+	// sorting_active = false;
+}
+
+Sorter::SortingAlgorithms Sorter::GetActiveAlgorithm()
+{
+	return active_algorithm;
+}
+
 void Sorter::SetActiveAlgorithm(SortingAlgorithms active_algorithm)
 {
 	this->active_algorithm = active_algorithm;
@@ -281,4 +397,38 @@ std::string Sorter::SortingEnumToString()
 	}
 
 	return text;
+}
+
+bool Sorter::GetSortingActive()
+{
+	return sorting_active;
+}
+
+void Sorter::SetSortingActive(bool active)
+{
+	sorting_active = active;
+}
+
+void Sorter::StartThread()
+{
+	std::thread th;
+
+	if (active_algorithm == Sorter::SortingAlgorithms::QuickSortEnum)
+		throw std::runtime_error("Feature not implemented yet");
+		//th = std::thread(&Sorter::QuickSort, 0, sorter.GetData().size() - 1);
+	if (active_algorithm == Sorter::SortingAlgorithms::BubbleSortEnum)
+		th = std::thread(&Sorter::BubbleSort, this);
+	if (active_algorithm == Sorter::SortingAlgorithms::CocktailSortEnum)
+		th = std::thread(&Sorter::CocktailSort, this);
+	if (active_algorithm == Sorter::SortingAlgorithms::CombSortEnum)
+		th = std::thread(&Sorter::CombSort, this);
+	if (active_algorithm == Sorter::SortingAlgorithms::GnomeSortEnum)
+		th = std::thread(&Sorter::GnomeSort, this);
+	if (active_algorithm == Sorter::SortingAlgorithms::ShellSortEnum)
+		th = std::thread(&Sorter::ShellSort, this);
+	if (active_algorithm == Sorter::SortingAlgorithms::CycleSortEnum)
+		th = std::thread(&Sorter::CycleSort, this);
+
+	sorting_active = true;
+	th.detach();
 }

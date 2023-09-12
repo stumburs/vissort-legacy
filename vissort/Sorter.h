@@ -2,6 +2,7 @@
 #include "Element.h"
 #include <vector>
 #include <string>
+#include <functional>
 
 class Sorter
 {
@@ -16,6 +17,10 @@ public:
 	void CocktailSort();
 	void GnomeSort();
 	void CycleSort();
+	int Partition(int low, int high);
+	void QuickSort(int low, int high);
+	int GetNextGap(int gap);
+	void CombSort();
 
 	enum SortingAlgorithms
 	{
@@ -28,11 +33,16 @@ public:
 		CycleSortEnum
 	};
 
+	SortingAlgorithms GetActiveAlgorithm();
 	void SetActiveAlgorithm(SortingAlgorithms active_algorithm);
 	std::string SortingEnumToString();
+	bool GetSortingActive();
+	void SetSortingActive(bool active);
+	void StartThread();
 
 private:
 	std::vector<Element> data;
 	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSortEnum;
+	bool sorting_active = false;
 };
 
