@@ -14,6 +14,7 @@ private:
 	DataGenerator& data_generator;
 
 	void DrawData(const std::vector<Element>& vec);
+	void DrawMenu();
 
 	bool settings_open = false;
 	int active = 0;

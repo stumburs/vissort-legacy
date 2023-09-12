@@ -276,20 +276,20 @@ int Sorter::Partition(int low, int high)
 
 void Sorter::QuickSort(int low, int high)
 {
-	//mutex.lock();
-	//quick_sort_finished.push(1);
-	//mutex.unlock();
+	quicksort_thread_mutex.lock();
+	quick_sort_thread_depth.push(1);
+	quicksort_thread_mutex.unlock();
 
 	if (low < high)
 	{
 		// Stop execution if sorting stopped
-		/*if (!sorting_active)
+		if (!sorting_active)
 		{
-			mutex.lock();
-			quick_sort_finished.pop();
-			mutex.unlock();
+			quicksort_thread_mutex.lock();
+			quick_sort_thread_depth.pop();
+			quicksort_thread_mutex.unlock();
 			return;
-		}*/
+		}
 
 		// pi is partitioning index, arr[p]
 		// is now at right place
@@ -301,12 +301,12 @@ void Sorter::QuickSort(int low, int high)
 		QuickSort(pi + 1, high);
 	}
 
-	//mutex.lock();
-	//quick_sort_finished.pop();
-	//mutex.unlock();
+	quicksort_thread_mutex.lock();
+	quick_sort_thread_depth.pop();
+	quicksort_thread_mutex.unlock();
 
-	//if (quick_sort_finished.size() == 0)
-	//	sorting_active = false;
+	if (quick_sort_thread_depth.size() == 0)
+		sorting_active = false;
 }
 
 int Sorter::GetNextGap(int gap)

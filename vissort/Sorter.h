@@ -3,6 +3,8 @@
 #include <vector>
 #include <string>
 #include <functional>
+#include <stack>
+#include <mutex>
 
 class Sorter
 {
@@ -50,5 +52,7 @@ private:
 	std::vector<Element> data;
 	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSortEnum;
 	bool sorting_active = false;
+	std::mutex quicksort_thread_mutex;
+	std::stack<int> quick_sort_thread_depth;
 };
 
