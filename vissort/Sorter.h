@@ -39,7 +39,6 @@ public:
 		CocktailSortEnum,
 		GnomeSortEnum,
 		CycleSortEnum,
-		BALLS,
 		END
 	};
 
