@@ -30,8 +30,8 @@ void Sorter::BubbleSort()
 	int i, j;
 	bool swapped;
 	int n = data.size();
-	for (i = 0; i < n - 1; i++) {
-
+	for (i = 0; i < n - 1; i++)
+	{
 		// Stop execution if sorting stopped
 		//if (!sorting_active)
 		//	return;
@@ -39,8 +39,10 @@ void Sorter::BubbleSort()
 		swapped = false;
 		//SetSoundPitch(sound, (float)i / n + 0.5);
 		//PlaySound(sound);
-		for (j = 0; j < n - i - 1; j++) {
-			if (data[j].value > data[j + 1].value) {
+		for (j = 0; j < n - i - 1; j++)
+		{
+			if (data[j].value > data[j + 1].value)
+			{
 				std::swap(data[j], data[j + 1]);
 				WaitTime(0.0001);
 				//return;
@@ -68,7 +70,6 @@ void Sorter::ShellSort()
 		// gap sorted 
 		for (int i = gap; i < n; i += 1)
 		{
-
 			// Stop execution if sorting stopped
 			//if (!sorting_active)
 			//	return;
@@ -101,8 +102,8 @@ void Sorter::CocktailSort()
 	int start = 0;
 	int end = n - 1;
 
-	while (swapped) {
-
+	while (swapped)
+	{
 		// Stop execution if sorting stopped
 		//if (!sorting_active)
 		//	return;
@@ -114,8 +115,10 @@ void Sorter::CocktailSort()
 
 		// loop from left to right same as
 		// the bubble sort
-		for (int i = start; i < end; ++i) {
-			if (data[i].value > data[i + 1].value) {
+		for (int i = start; i < end; ++i)
+		{
+			if (data[i].value > data[i + 1].value)
+			{
 				WaitTime(0.0001);
 				std::swap(data[i], data[i + 1]);
 				swapped = true;
@@ -136,8 +139,10 @@ void Sorter::CocktailSort()
 
 		// from right to left, doing the
 		// same comparison as in the previous stage
-		for (int i = end - 1; i >= start; --i) {
-			if (data[i].value > data[i + 1].value) {
+		for (int i = end - 1; i >= start; --i)
+		{
+			if (data[i].value > data[i + 1].value)
+			{
 				WaitTime(0.0001);
 				std::swap(data[i], data[i + 1]);
 				swapped = true;
@@ -158,8 +163,8 @@ void Sorter::GnomeSort()
 	int n = data.size();
 	int index = 0;
 
-	while (index < n) {
-
+	while (index < n)
+	{
 		// Stop execution if sorting stopped
 		//if (!sorting_active)
 		//	return;
@@ -168,7 +173,8 @@ void Sorter::GnomeSort()
 			index++;
 		if (data[index].value >= data[index - 1].value)
 			index++;
-		else {
+		else
+		{
 			std::swap(data[index], data[index - 1]);
 			index--;
 		}
@@ -186,7 +192,8 @@ void Sorter::CycleSort()
 
 	// traverse array elements and put it to on
 	// the right place
-	for (int cycle_start = 0; cycle_start <= n - 2; cycle_start++) {
+	for (int cycle_start = 0; cycle_start <= n - 2; cycle_start++)
+	{
 		// initialize item as starting point
 		Element item = data[cycle_start];
 
@@ -206,13 +213,15 @@ void Sorter::CycleSort()
 			pos += 1;
 
 		// put the item to it's right position
-		if (pos != cycle_start) {
+		if (pos != cycle_start)
+		{
 			std::swap(item, data[pos]);
 			writes++;
 		}
 
 		// Rotate rest of the cycle
-		while (pos != cycle_start) {
+		while (pos != cycle_start)
+		{
 			pos = cycle_start;
 
 			WaitTime(0.005);
@@ -224,7 +233,6 @@ void Sorter::CycleSort()
 			// Find position where we put the element
 			for (int i = cycle_start + 1; i < n; i++)
 			{
-
 				if (data[i].value < item.value)
 					pos += 1;
 			}
@@ -234,7 +242,8 @@ void Sorter::CycleSort()
 				pos += 1;
 
 			// put the item to it's right position
-			if (item.value != data[pos].value) {
+			if (item.value != data[pos].value)
+			{
 				std::swap(item, data[pos]);
 				writes++;
 			}
@@ -255,13 +264,14 @@ int Sorter::Partition(int low, int high)
 	// the right position of pivot found so far
 	int i = (low - 1);
 
-	for (int j = low; j <= high - 1; j++) {
+	for (int j = low; j <= high - 1; j++)
+	{
 		//SetSoundPitch(sound, (float)j / high + 0.2);
 		//PlaySound(sound);
 		WaitTime(0.001);
 		// If current element is smaller than the pivot
-		if (data[j].value < pivot) {
-
+		if (data[j].value < pivot)
+		{
 			// Increment index of smaller element
 			i++;
 			std::swap(data[i], data[j]);
@@ -277,8 +287,8 @@ void Sorter::QuickSort(int low, int high)
 	//quick_sort_finished.push(1);
 	//mutex.unlock();
 
-	if (low < high) {
-
+	if (low < high)
+	{
 		// Stop execution if sorting stopped
 		/*if (!sorting_active)
 		{
@@ -330,7 +340,6 @@ void Sorter::CombSort()
 	// iteration caused a swap
 	while (gap != 1 || swapped == true)
 	{
-
 		//if (!sorting_active)
 		//	return;
 
