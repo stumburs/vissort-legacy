@@ -21,5 +21,6 @@ private:
 	int active = 0;
 	bool dropdown_edit_mode = false;
 	int new_vec_size = 100;
+	double new_sorting_delay = 0.001;
 };
 

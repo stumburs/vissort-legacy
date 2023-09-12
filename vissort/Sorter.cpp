@@ -42,7 +42,7 @@ void Sorter::BubbleSort()
 			if (data[j].value > data[j + 1].value)
 			{
 				std::swap(data[j], data[j + 1]);
-				WaitTime(0.0001);
+				WaitTime(sorting_delay);
 				//return;
 				swapped = true;
 			}
@@ -82,7 +82,7 @@ void Sorter::ShellSort()
 			for (j = i; j >= gap && data[j - gap].value > temp.value; j -= gap)
 			{
 				data[j] = data[j - gap];
-				WaitTime(0.001);
+				WaitTime(sorting_delay);
 			}
 
 			//  put temp (the original a[i]) in its correct location
@@ -117,7 +117,7 @@ void Sorter::CocktailSort()
 		{
 			if (data[i].value > data[i + 1].value)
 			{
-				WaitTime(0.0001);
+				WaitTime(sorting_delay);
 				std::swap(data[i], data[i + 1]);
 				swapped = true;
 			}
@@ -141,7 +141,7 @@ void Sorter::CocktailSort()
 		{
 			if (data[i].value > data[i + 1].value)
 			{
-				WaitTime(0.0001);
+				WaitTime(sorting_delay);
 				std::swap(data[i], data[i + 1]);
 				swapped = true;
 			}
@@ -176,7 +176,7 @@ void Sorter::GnomeSort()
 			std::swap(data[index], data[index - 1]);
 			index--;
 		}
-		WaitTime(0.0001);
+		WaitTime(sorting_delay);
 	}
 	sorting_active = false;
 }
@@ -222,7 +222,7 @@ void Sorter::CycleSort()
 		{
 			pos = cycle_start;
 
-			WaitTime(0.005);
+			WaitTime(sorting_delay);
 
 			// Stop execution if sorting stopped
 			if (!sorting_active)
@@ -261,7 +261,7 @@ int Sorter::Partition(int low, int high)
 
 	for (int j = low; j <= high - 1; j++)
 	{
-		WaitTime(0.001);
+		WaitTime(sorting_delay);
 		// If current element is smaller than the pivot
 		if (data[j].value < pivot)
 		{
@@ -348,7 +348,7 @@ void Sorter::CombSort()
 		{
 			if (data[i].value > data[i + gap].value)
 			{
-				WaitTime(0.001);
+				WaitTime(sorting_delay);
 				std::swap(data[i], data[i + gap]);
 				swapped = true;
 			}
@@ -365,40 +365,6 @@ Sorter::SortingAlgorithms Sorter::GetActiveAlgorithm()
 void Sorter::SetActiveAlgorithm(SortingAlgorithms active_algorithm)
 {
 	this->active_algorithm = active_algorithm;
-}
-
-std::string Sorter::ActiveAlgorithmToString()
-{
-	std::string text;
-	switch (this->active_algorithm)
-	{
-	case SortingAlgorithms::BubbleSortEnum:
-		text = "Bubble Sort";
-		break;
-	case SortingAlgorithms::CocktailSortEnum:
-		text = "Cocktail Sort";
-		break;
-	case SortingAlgorithms::CombSortEnum:
-		text = "Comb Sort";
-		break;
-	case SortingAlgorithms::GnomeSortEnum:
-		text = "Gnome Sort";
-		break;
-	case SortingAlgorithms::QuickSortEnum:
-		text = "Quick Sort";
-		break;
-	case SortingAlgorithms::ShellSortEnum:
-		text = "Shell Sort";
-		break;
-	case SortingAlgorithms::CycleSortEnum:
-		text = "Cycle Sort";
-		break;
-	default:
-		text = "Unknown algorithm";
-		break;
-	}
-
-	return text;
 }
 
 std::string Sorter::SortingEnumToString(SortingAlgorithms algorithm)
@@ -466,4 +432,9 @@ void Sorter::StartThread()
 
 	sorting_active = true;
 	th.detach();
+}
+
+void Sorter::SetSortingDelay(double delay)
+{
+	this->sorting_delay = delay;
 }

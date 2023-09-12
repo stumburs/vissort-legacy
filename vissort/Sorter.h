@@ -44,11 +44,11 @@ public:
 
 	SortingAlgorithms GetActiveAlgorithm();
 	void SetActiveAlgorithm(SortingAlgorithms active_algorithm);
-	std::string ActiveAlgorithmToString();
 	std::string SortingEnumToString(SortingAlgorithms algorithm);
 	bool GetSortingActive();
 	void SetSortingActive(bool active);
 	void StartThread();
+	void SetSortingDelay(double delay);
 
 private:
 	std::vector<Element> data;
@@ -56,5 +56,6 @@ private:
 	bool sorting_active = false;
 	std::mutex quicksort_thread_mutex;
 	std::stack<int> quick_sort_thread_depth;
+	double sorting_delay = 0.001;
 };
 

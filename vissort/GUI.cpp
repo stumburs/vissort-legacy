@@ -111,13 +111,17 @@ void GUI::DrawMenu()
 			GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
 			GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 209, 154, 102, 255 }));
 
-			if (GuiButton({ 20, 270, 120, 40 }, "Apply") && !sorting_active)
-				sorter.InitVector(new_vec_size);
-
 			if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorting_active)
 				data_generator.Randomize(sorter.GetData());
 
 			new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
+			new_sorting_delay = (int)GuiSlider({ 20, 270, 200, 40 }, "", TextFormat("%.4lf", new_sorting_delay / 10000), new_sorting_delay, 1, 1000);
+
+			if (GuiButton({ 20, 320, 120, 40 }, "Apply") && !sorting_active)
+			{
+				sorter.InitVector(new_vec_size);
+				sorter.SetSortingDelay(new_sorting_delay / 10000);
+			}
 		}
 
 		if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateDropdownOptions().c_str(), &active, dropdown_edit_mode))
