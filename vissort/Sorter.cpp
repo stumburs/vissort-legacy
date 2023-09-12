@@ -367,10 +367,44 @@ void Sorter::SetActiveAlgorithm(SortingAlgorithms active_algorithm)
 	this->active_algorithm = active_algorithm;
 }
 
-std::string Sorter::SortingEnumToString()
+std::string Sorter::ActiveAlgorithmToString()
 {
 	std::string text;
 	switch (this->active_algorithm)
+	{
+	case SortingAlgorithms::BubbleSortEnum:
+		text = "Bubble Sort";
+		break;
+	case SortingAlgorithms::CocktailSortEnum:
+		text = "Cocktail Sort";
+		break;
+	case SortingAlgorithms::CombSortEnum:
+		text = "Comb Sort";
+		break;
+	case SortingAlgorithms::GnomeSortEnum:
+		text = "Gnome Sort";
+		break;
+	case SortingAlgorithms::QuickSortEnum:
+		text = "Quick Sort";
+		break;
+	case SortingAlgorithms::ShellSortEnum:
+		text = "Shell Sort";
+		break;
+	case SortingAlgorithms::CycleSortEnum:
+		text = "Cycle Sort";
+		break;
+	default:
+		text = "Unknown algorithm";
+		break;
+	}
+
+	return text;
+}
+
+std::string Sorter::SortingEnumToString(SortingAlgorithms algorithm)
+{
+	std::string text;
+	switch (algorithm)
 	{
 	case SortingAlgorithms::BubbleSortEnum:
 		text = "Bubble Sort";

@@ -15,6 +15,7 @@ private:
 
 	void DrawData(const std::vector<Element>& vec);
 	void DrawMenu();
+	std::string GenerateDropdownOptions();
 
 	bool settings_open = false;
 	int active = 0;

@@ -38,12 +38,15 @@ public:
 		ShellSortEnum,
 		CocktailSortEnum,
 		GnomeSortEnum,
-		CycleSortEnum
+		CycleSortEnum,
+		BALLS,
+		END
 	};
 
 	SortingAlgorithms GetActiveAlgorithm();
 	void SetActiveAlgorithm(SortingAlgorithms active_algorithm);
-	std::string SortingEnumToString();
+	std::string ActiveAlgorithmToString();
+	std::string SortingEnumToString(SortingAlgorithms algorithm);
 	bool GetSortingActive();
 	void SetSortingActive(bool active);
 	void StartThread();

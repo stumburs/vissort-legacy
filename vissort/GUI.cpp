@@ -4,6 +4,7 @@
 #include "raygui.h"
 #include <thread>
 #include <iostream>
+#include <sstream>
 
 GUI::GUI(Sorter& sorter, DataGenerator& data_generator) : sorter(sorter), data_generator(data_generator)
 {
@@ -71,7 +72,7 @@ void GUI::DrawData(const std::vector<Element>& vec)
 
 void GUI::DrawMenu()
 {
-	if (GuiButton({ 20, 20, 40, 40 }, "")) // toggle settings menu
+	if (GuiButton({ 20, 20, 40, 40 }, "")) // Toggle settings menu
 		settings_open = !settings_open;
 
 	// Change gear icon depending on hover
@@ -119,10 +120,24 @@ void GUI::DrawMenu()
 			new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
 		}
 
-		if (GuiDropdownBox({ 20, 70, 200, 40 }, "Bubble Sort;Quick Sort;Comb Sort;Shell Sort;Cocktail Sort;Gnome Sort;Cycle Sort", &active, dropdown_edit_mode))
+		if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateDropdownOptions().c_str(), &active, dropdown_edit_mode))
 		{
 			dropdown_edit_mode = !dropdown_edit_mode;
 			sorter.SetActiveAlgorithm(Sorter::SortingAlgorithms(active));
 		}
 	}
+}
+
+std::string GUI::GenerateDropdownOptions()
+{
+	std::stringstream ss;
+	for (int i = 0; i < Sorter::SortingAlgorithms::END; i++)
+	{
+		ss << sorter.SortingEnumToString(Sorter::SortingAlgorithms(i));
+
+		// Add seperators before the last entry
+		if (i < Sorter::SortingAlgorithms::END - 1)
+			ss << ';';
+	}
+	return ss.str();
 }
