@@ -51,22 +51,27 @@ void GUI::Render()
 
 		if (settings_open)
 		{
-			if (!dropdown_edit_mode)
+			if (!dropdown_edit_mode) // Dropdown closed
 			{
-				std::string sorting_text = sorter.GetSortingActive() ? "Stop" : "Start";
-				if (sorter.GetSortingActive())
+				bool sorting_active = sorter.GetSortingActive();
+				if (sorting_active)
 				{
 					GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 224, 108, 117, 255 }));
 					GuiSetStyle(DEFAULT, TEXT_COLOR_FOCUSED, ColorToInt({ 224, 108, 117, 255 }));
 					GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 190, 80, 70, 255 }));
 					GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 190, 80, 70, 255 }));
 				}
+				std::string sorting_text = sorting_active ? "Stop" : "Start";
 				if (GuiButton({ 20, 120, 120, 40 }, sorting_text.c_str()))
 				{
-					if (!sorter.GetSortingActive())
+					if (!sorting_active)
 					{
 						sorter.StartThread();
 						std::cout << "Thread started!\n";
+					}
+					else
+					{
+						sorter.SetSortingActive(false);
 					}
 				}
 				GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
@@ -74,10 +79,10 @@ void GUI::Render()
 				GuiSetStyle(DEFAULT, BORDER_COLOR_NORMAL, ColorToInt({ 171, 178, 191, 255 }));
 				GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 209, 154, 102, 255 }));
 
-				if (GuiButton({ 20, 270, 120, 40 }, "Apply") && !sorter.GetSortingActive())
+				if (GuiButton({ 20, 270, 120, 40 }, "Apply") && !sorting_active)
 					sorter.InitVector(new_vec_size);
 
-				if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorter.GetSortingActive())
+				if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorting_active)
 					data_generator.Randomize(sorter.GetData());
 
 				new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
@@ -89,7 +94,6 @@ void GUI::Render()
 				sorter.SetActiveAlgorithm(Sorter::SortingAlgorithms(active));
 			}
 		}
-
 	}
 	EndDrawing();
 }

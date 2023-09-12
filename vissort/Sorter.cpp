@@ -33,12 +33,10 @@ void Sorter::BubbleSort()
 	for (i = 0; i < n - 1; i++)
 	{
 		// Stop execution if sorting stopped
-		//if (!sorting_active)
-		//	return;
+		if (!sorting_active)
+			return;
 
 		swapped = false;
-		//SetSoundPitch(sound, (float)i / n + 0.5);
-		//PlaySound(sound);
 		for (j = 0; j < n - i - 1; j++)
 		{
 			if (data[j].value > data[j + 1].value)
@@ -55,7 +53,7 @@ void Sorter::BubbleSort()
 		if (swapped == false)
 			break;
 	}
-	//sorting_active = false;
+	sorting_active = false;
 }
 
 void Sorter::ShellSort()
@@ -71,8 +69,8 @@ void Sorter::ShellSort()
 		for (int i = gap; i < n; i += 1)
 		{
 			// Stop execution if sorting stopped
-			//if (!sorting_active)
-			//	return;
+			if (!sorting_active)
+				return;
 
 			// add a[i] to the elements that have been gap sorted
 			// save a[i] in temp and make a hole at position i
@@ -91,7 +89,7 @@ void Sorter::ShellSort()
 			data[j] = temp;
 		}
 	}
-	// sorting_active = false;
+	 sorting_active = false;
 }
 
 // Cocktail sort
@@ -105,8 +103,8 @@ void Sorter::CocktailSort()
 	while (swapped)
 	{
 		// Stop execution if sorting stopped
-		//if (!sorting_active)
-		//	return;
+		if (!sorting_active)
+			return;
 
 		// reset the swapped flag on entering
 		// the loop, because it might be true from
@@ -154,7 +152,7 @@ void Sorter::CocktailSort()
 		// smallest number to its rightful spot.
 		++start;
 	}
-	//sorting_active = false;
+	sorting_active = false;
 }
 
 // A function to sort the algorithm using gnome sort
@@ -166,8 +164,8 @@ void Sorter::GnomeSort()
 	while (index < n)
 	{
 		// Stop execution if sorting stopped
-		//if (!sorting_active)
-		//	return;
+		if (!sorting_active)
+			return;
 
 		if (index == 0)
 			index++;
@@ -180,7 +178,7 @@ void Sorter::GnomeSort()
 		}
 		WaitTime(0.0001);
 	}
-	//sorting_active = false;
+	sorting_active = false;
 }
 
 // Function sort the array using Cycle sort
@@ -227,8 +225,8 @@ void Sorter::CycleSort()
 			WaitTime(0.005);
 
 			// Stop execution if sorting stopped
-			//if (!sorting_active)
-			//	return;
+			if (!sorting_active)
+				return;
 
 			// Find position where we put the element
 			for (int i = cycle_start + 1; i < n; i++)
@@ -249,10 +247,7 @@ void Sorter::CycleSort()
 			}
 		}
 	}
-
-	// Number of memory writes or swaps
-	// cout << writes << endl ;
-	//sorting_active = false;
+	sorting_active = false;
 }
 
 int Sorter::Partition(int low, int high)
@@ -266,8 +261,6 @@ int Sorter::Partition(int low, int high)
 
 	for (int j = low; j <= high - 1; j++)
 	{
-		//SetSoundPitch(sound, (float)j / high + 0.2);
-		//PlaySound(sound);
 		WaitTime(0.001);
 		// If current element is smaller than the pivot
 		if (data[j].value < pivot)
@@ -340,8 +333,8 @@ void Sorter::CombSort()
 	// iteration caused a swap
 	while (gap != 1 || swapped == true)
 	{
-		//if (!sorting_active)
-		//	return;
+		if (!sorting_active)
+			return;
 
 		// Find next gap
 		gap = GetNextGap(gap);
@@ -361,7 +354,7 @@ void Sorter::CombSort()
 			}
 		}
 	}
-	// sorting_active = false;
+	 sorting_active = false;
 }
 
 Sorter::SortingAlgorithms Sorter::GetActiveAlgorithm()
