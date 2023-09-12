@@ -13,14 +13,20 @@ public:
 
 	// Sorting algorithms
 	void BubbleSort();
-	void ShellSort();
-	void CocktailSort();
-	void GnomeSort();
-	void CycleSort();
+
 	int Partition(int low, int high);
 	void QuickSort(int low, int high);
+
 	int GetNextGap(int gap);
 	void CombSort();
+
+	void ShellSort();
+
+	void CocktailSort();
+
+	void GnomeSort();
+
+	void CycleSort();
 
 	enum SortingAlgorithms
 	{

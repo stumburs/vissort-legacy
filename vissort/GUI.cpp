@@ -40,8 +40,10 @@ void GUI::Render()
 
 		DrawData(sorter.GetData());
 
-		if (GuiButton({ 20, 20, 40, 40 }, ""))
+		if (GuiButton({ 20, 20, 40, 40 }, "")) // toggle settings menu
 			settings_open = !settings_open;
+
+		// Change gear icon depending on hover
 		if (CheckCollisionPointRec(GetMousePosition(), { 20, 20, 40, 40 }))
 			GuiDrawIcon(GuiIconName::ICON_GEAR, 24, 24, 2, { 229, 192, 123, 255 });
 		else

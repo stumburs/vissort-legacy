@@ -414,8 +414,7 @@ void Sorter::StartThread()
 	std::thread th;
 
 	if (active_algorithm == Sorter::SortingAlgorithms::QuickSortEnum)
-		throw std::runtime_error("Feature not implemented yet");
-		//th = std::thread(&Sorter::QuickSort, 0, sorter.GetData().size() - 1);
+		th = std::thread(&Sorter::QuickSort, this, 0, data.size() - 1);
 	if (active_algorithm == Sorter::SortingAlgorithms::BubbleSortEnum)
 		th = std::thread(&Sorter::BubbleSort, this);
 	if (active_algorithm == Sorter::SortingAlgorithms::CocktailSortEnum)
