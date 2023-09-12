@@ -135,7 +135,7 @@ std::string GUI::GenerateDropdownOptions()
 	{
 		ss << sorter.SortingEnumToString(Sorter::SortingAlgorithms(i));
 
-		// Add seperators before the last entry
+		// Add separators before the last entry
 		if (i < Sorter::SortingAlgorithms::END - 1)
 			ss << ';';
 	}
