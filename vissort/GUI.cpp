@@ -115,12 +115,12 @@ void GUI::DrawMenu()
 				data_generator.Randomize(sorter.GetData());
 
 			new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
-			new_sorting_delay = (int)GuiSlider({ 20, 270, 200, 40 }, "", TextFormat("%.4lf", new_sorting_delay / 10000), new_sorting_delay, 1, 1000);
+			new_sorting_delay = GuiSlider({ 20, 270, 200, 40 }, "", TextFormat("%.0lfms", new_sorting_delay * 1000), new_sorting_delay, 0.0001, 0.1);
 
 			if (GuiButton({ 20, 320, 120, 40 }, "Apply") && !sorting_active)
 			{
 				sorter.InitVector(new_vec_size);
-				sorter.SetSortingDelay(new_sorting_delay / 10000);
+				sorter.SetSortingDelay(new_sorting_delay);
 			}
 		}
 
