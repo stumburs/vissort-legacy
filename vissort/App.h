@@ -1,7 +1,6 @@
 #pragma once
 #include "GUI.h"
 #include "Sorter.h"
-#include "Element.h"
 #include "DataGenerator.h"
 #include <vector>
 
@@ -12,8 +11,8 @@ public:
 	void Run();
 
 private:
-	Sorter sorter;
 	DataGenerator data_generator;
+	Sorter sorter;
 	GUI gui;
 };
 

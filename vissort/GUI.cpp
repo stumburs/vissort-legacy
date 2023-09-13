@@ -48,8 +48,11 @@ void GUI::Render()
 
 void GUI::DrawData(const std::vector<Element>& vec)
 {
+	if (vec.empty())
+		return;
 	// Find largest element in vec
 	int max = vec.begin()->value;
+
 	for (const auto& elem : vec)
 	{
 		if (elem.value > max)
@@ -72,7 +75,7 @@ void GUI::DrawData(const std::vector<Element>& vec)
 
 void GUI::DrawMenu()
 {
-	if (GuiButton({ 20, 20, 40, 40 }, "")) // Toggle settings menu
+	if (GuiButton({ 20, 20, 40, 40 }, NULL)) // Toggle settings menu
 		settings_open = !settings_open;
 
 	// Change gear icon depending on hover
@@ -113,13 +116,15 @@ void GUI::DrawMenu()
 
 			if (GuiButton({ 20, 170, 120, 40 }, "Randomize") && !sorting_active)
 				data_generator.Randomize(sorter.GetData());
+			if (GuiButton({ 150, 170, 120, 40 }, "Sin") && !sorting_active)
+				data_generator.Sin(sorter.GetData());
 
 			new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
-			new_sorting_delay = GuiSlider({ 20, 270, 200, 40 }, "", TextFormat("%.0lfms", new_sorting_delay * 1000), new_sorting_delay, 0.0001, 0.1);
+			new_sorting_delay = GuiSlider({ 20, 270, 200, 40 }, "", TextFormat("%.4lf", new_sorting_delay), new_sorting_delay, 0.0001, 0.1);
 
 			if (GuiButton({ 20, 320, 120, 40 }, "Apply") && !sorting_active)
 			{
-				sorter.InitVector(new_vec_size);
+				data_generator.Initialize(sorter.GetData(), new_vec_size);
 				sorter.SetSortingDelay(new_sorting_delay);
 			}
 		}

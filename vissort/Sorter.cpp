@@ -2,22 +2,10 @@
 #include <thread>
 #include <stdexcept>
 
-Sorter::Sorter()
+Sorter::Sorter(DataGenerator& data_generator) : data_generator(data_generator)
 {
-	InitVector(100);
-}
-
-void Sorter::InitVector(int size)
-{
-	data.clear();
-	for (int i = 1; i < size + 1; i++)
-	{
-		Element elem{};
-		elem.value = i;
-		elem.color = ColorFromHSV((float)i / size * 360.0f, 0.3f, 1.0f);
-		data.push_back(elem);
-	}
-}
+	 data_generator.Initialize(data, 100);
+};
 
 std::vector<Element>& Sorter::GetData()
 {
@@ -89,7 +77,7 @@ void Sorter::ShellSort()
 			data[j] = temp;
 		}
 	}
-	 sorting_active = false;
+	sorting_active = false;
 }
 
 // Cocktail sort
@@ -354,7 +342,7 @@ void Sorter::CombSort()
 			}
 		}
 	}
-	 sorting_active = false;
+	sorting_active = false;
 }
 
 Sorter::SortingAlgorithms Sorter::GetActiveAlgorithm()
