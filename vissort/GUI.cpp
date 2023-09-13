@@ -118,6 +118,8 @@ void GUI::DrawMenu()
 				data_generator.Randomize(sorter.GetData());
 			if (GuiButton({ 150, 170, 120, 40 }, "Sin") && !sorting_active)
 				data_generator.Sin(sorter.GetData());
+			if (GuiButton({ 280, 170, 120, 40 }, "Reverse") && !sorting_active)
+				data_generator.Reverse(sorter.GetData());
 
 			new_vec_size = (int)GuiSlider({ 20, 220, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
 			new_sorting_delay = GuiSlider({ 20, 270, 200, 40 }, "", TextFormat("%.4lf", new_sorting_delay), new_sorting_delay, 0.0001, 0.1);

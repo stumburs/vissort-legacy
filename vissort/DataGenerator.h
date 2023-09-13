@@ -9,4 +9,5 @@ public:
 	void Initialize(std::vector<Element>& data, std::size_t size);
 	void Randomize(std::vector<Element>& data);
 	void Sin(std::vector<Element>& data);
+	void Reverse(std::vector<Element>& data);
 };

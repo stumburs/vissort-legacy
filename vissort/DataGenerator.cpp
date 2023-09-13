@@ -39,3 +39,16 @@ void DataGenerator::Sin(std::vector<Element>& data)
 	}
 }
 
+void DataGenerator::Reverse(std::vector<Element>& data)
+{
+	std::size_t size = data.size();
+	data.clear();
+	for (int i = 1; i < size + 1; i++)
+	{
+		Element elem{};
+		elem.value = size - i;
+		elem.color = ColorFromHSV((float)i / size * 360.0f, 0.3f, 1.0f);
+		data.push_back(elem);
+	}
+}
+
