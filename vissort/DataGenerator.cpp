@@ -39,6 +39,20 @@ void DataGenerator::Sin(std::vector<Element>& data)
 	}
 }
 
+void DataGenerator::Fuzzy(std::vector<Element>& data)
+{
+	std::size_t size = data.size();
+	data.clear();
+
+	for (int i = 1; i < size + 1; i++)
+	{
+		Element elem{};
+		elem.value = i + static_cast<float>(std::rand()) / RAND_MAX * size - size / 2.0f;
+		elem.color = ColorFromHSV((float)i / size * 360.0f, 0.3f, 1.0f);
+		data.push_back(elem);
+	}
+}
+
 void DataGenerator::Reverse(std::vector<Element>& data)
 {
 	std::size_t size = data.size();
