@@ -89,41 +89,41 @@ void GUI::DrawMenu()
 	if (settings_open)
 	{
 		// Column 1
-		if (!shuffle_dropdown_edit)
+		// Hide UI while sorting
+		if (!sorting_active)
 		{
-			new_vec_size = (int)GuiSlider({ 20, 120, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
-			if (GuiButton({ 20, 170, 120, 40 }, "Apply") && !sorting_active)
+			if (!shuffle_dropdown_edit)
 			{
-				data_generator.Initialize(sorter.GetData(), new_vec_size);
-				data_generator.Shuffle(sorter.GetData());
+				new_vec_size = (int)GuiSlider({ 20, 120, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
+				if (GuiButton({ 20, 170, 120, 40 }, "Apply") && !sorting_active)
+				{
+					data_generator.Initialize(sorter.GetData(), new_vec_size);
+					data_generator.Shuffle(sorter.GetData());
+				}
+				if (GuiButton({ 20, 220, 120, 40 }, "Randomize") && !sorting_active)
+					data_generator.Randomize(sorter.GetData());
 			}
-			if (GuiButton({ 20, 220, 120, 40 }, "Randomize") && !sorting_active)
-				data_generator.Randomize(sorter.GetData());
-		}
-		// Shuffling Dropdown
-		if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateShufflingDropdownOptions().c_str(), &shuffle_selected, shuffle_dropdown_edit))
-		{
-			shuffle_dropdown_edit = !shuffle_dropdown_edit;
-			data_generator.SetActiveShuffle(DataGenerator::ShufflingTypes(shuffle_selected));
-		}
+			// Shuffling Dropdown
+			if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateShufflingDropdownOptions().c_str(), &shuffle_selected, shuffle_dropdown_edit))
+			{
+				shuffle_dropdown_edit = !shuffle_dropdown_edit;
+				data_generator.SetActiveShuffle(DataGenerator::ShufflingTypes(shuffle_selected));
+			}
 
-		// Column 2
-		//
-		if (!sorting_dropdown_edit) // Dropdown closed
-		{
-			new_sorting_delay = GuiSlider({ 230, 120, 200, 40 }, "", TextFormat("%.4lf", new_sorting_delay), new_sorting_delay, 0.0001, 0.1);
-			sorter.SetSortingDelay(new_sorting_delay);
+			// Column 2
+			//
+			if (!sorting_dropdown_edit) // Dropdown closed
+			{
+				new_sorting_delay = GuiSlider({ 230, 120, 200, 40 }, "", TextFormat("%.4lf", new_sorting_delay), new_sorting_delay, 0.0001, 0.1);
+				sorter.SetSortingDelay(new_sorting_delay);
+			}
+			// Sorting dropdown
+			if (GuiDropdownBox({ 230, 70, 200, 40 }, GenerateSortingAlgorithmDropdownOptions().c_str(), &sorting_selected, sorting_dropdown_edit))
+			{
+				sorting_dropdown_edit = !sorting_dropdown_edit;
+				sorter.SetActiveAlgorithm(Sorter::SortingAlgorithms(sorting_selected));
+			}
 		}
-		// Sorting dropdown
-		if (GuiDropdownBox({ 230, 70, 200, 40 }, GenerateSortingAlgorithmDropdownOptions().c_str(), &sorting_selected, sorting_dropdown_edit))
-		{
-			sorting_dropdown_edit = !sorting_dropdown_edit;
-			sorter.SetActiveAlgorithm(Sorter::SortingAlgorithms(sorting_selected));
-		}
-
-		// Column 3
-		//
-		// Start/Stop sorting
 		if (sorting_active)
 		{
 			GuiSetStyle(DEFAULT, TEXT_COLOR_NORMAL, ColorToInt({ 224, 108, 117, 255 }));
@@ -132,7 +132,7 @@ void GUI::DrawMenu()
 			GuiSetStyle(DEFAULT, BORDER_COLOR_FOCUSED, ColorToInt({ 190, 80, 70, 255 }));
 		}
 		std::string sorting_text = sorting_active ? "Stop" : "Start";
-		if (GuiButton({ 440, 70, 120, 40 }, sorting_text.c_str()))
+		if (GuiButton({ 70, 20, 120, 40 }, sorting_text.c_str()))
 		{
 			if (!sorting_active)
 			{
