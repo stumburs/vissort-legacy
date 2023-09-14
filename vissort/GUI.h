@@ -15,11 +15,14 @@ private:
 
 	void DrawData(const std::vector<Element>& vec);
 	void DrawMenu();
-	std::string GenerateDropdownOptions();
+	std::string GenerateSortingAlgorithmDropdownOptions();
+	std::string GenerateShufflingDropdownOptions();
 
 	bool settings_open = false;
-	int active = 0;
-	bool dropdown_edit_mode = false;
+	bool shuffle_dropdown_edit = false;
+	int shuffle_selected = 0;
+	bool sorting_dropdown_edit = false;
+	int sorting_selected = 0;
 	int new_vec_size = 100;
 	double new_sorting_delay = 0.001;
 };

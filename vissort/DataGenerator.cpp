@@ -66,3 +66,40 @@ void DataGenerator::Reverse(std::vector<Element>& data)
 	}
 }
 
+void DataGenerator::Shuffle(std::vector<Element>& data)
+{
+	if (active_shuffle == DataGenerator::ShufflingTypes::SinShuffle)
+		Sin(data);
+	if (active_shuffle == DataGenerator::ShufflingTypes::FuzzyShuffle)
+		Fuzzy(data);
+	if (active_shuffle == DataGenerator::ShufflingTypes::ReverseShuffle)
+		Reverse(data);
+}
+
+void DataGenerator::SetActiveShuffle(ShufflingTypes type)
+{
+	active_shuffle = type;
+}
+
+std::string DataGenerator::ShufflingTypesToString(ShufflingTypes type)
+{
+	std::string text;
+	switch (type)
+	{
+	case ShufflingTypes::SinShuffle:
+		text = "Sin Wave";
+		break;
+	case ShufflingTypes::FuzzyShuffle:
+		text = "Fuzzy Asc";
+		break;
+	case ShufflingTypes::ReverseShuffle:
+		text = "Reverse";
+		break;
+	default:
+		text = "Unknown type";
+		break;
+	}
+
+	return text;
+}
+
