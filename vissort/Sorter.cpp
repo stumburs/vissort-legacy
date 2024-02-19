@@ -4,7 +4,7 @@
 
 Sorter::Sorter(DataGenerator& data_generator) : data_generator(data_generator)
 {
-	 data_generator.Initialize(data, 100);
+	data_generator.Initialize(data, 100);
 };
 
 std::vector<Element>& Sorter::GetData()
