@@ -94,7 +94,9 @@ void GUI::DrawMenu()
 		{
 			if (!shuffle_dropdown_edit)
 			{
-				new_vec_size = (int)GuiSlider({ 20, 120, 200, 40 }, "", TextFormat("%d", new_vec_size), new_vec_size, 4, GetScreenWidth());
+				new_vec_size = (int)GuiSlider({ 20, 120, 200, 40 }, "", "", new_vec_size, 4, GetScreenWidth());
+				DrawText(TextFormat("%d", new_vec_size), (20 + 200 / 2) - MeasureText(TextFormat("%d", new_vec_size), 20) / 2, 130, 20, GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)));
+
 				if (GuiButton({ 20, 170, 120, 40 }, "Apply") && !sorting_active)
 				{
 					data_generator.Initialize(sorter.GetData(), new_vec_size);
@@ -114,7 +116,8 @@ void GUI::DrawMenu()
 			//
 			if (!sorting_dropdown_edit) // Dropdown closed
 			{
-				new_sorting_delay = GuiSlider({ 230, 120, 200, 40 }, "", TextFormat("%.4lf", new_sorting_delay), new_sorting_delay, 0.0001, 0.1);
+				new_sorting_delay = GuiSlider({ 230, 120, 200, 40 }, "", "ms", new_sorting_delay, 0.0001, 0.1);
+				DrawText(TextFormat("%.4lf", new_sorting_delay * 1000), (230 + 200 / 2) - MeasureText(TextFormat("%.4lf", new_sorting_delay * 1000), 20) / 2, 130, 20, GetColor(GuiGetStyle(DEFAULT, TEXT_COLOR_NORMAL)));
 				sorter.SetSortingDelay(new_sorting_delay);
 			}
 			// Sorting dropdown
