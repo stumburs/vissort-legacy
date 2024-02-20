@@ -27,6 +27,8 @@ void Sorter::BubbleSort()
 		swapped = false;
 		for (j = 0; j < n - i - 1; j++)
 		{
+			if (!sorting_active)
+				return;
 			if (data[j].value > data[j + 1].value)
 			{
 				std::swap(data[j], data[j + 1]);
@@ -103,6 +105,8 @@ void Sorter::CocktailSort()
 		// the bubble sort
 		for (int i = start; i < end; ++i)
 		{
+			if (!sorting_active)
+				return;
 			if (data[i].value > data[i + 1].value)
 			{
 				WaitTime(sorting_delay);
@@ -127,6 +131,8 @@ void Sorter::CocktailSort()
 		// same comparison as in the previous stage
 		for (int i = end - 1; i >= start; --i)
 		{
+			if (!sorting_active)
+				return;
 			if (data[i].value > data[i + 1].value)
 			{
 				WaitTime(sorting_delay);
@@ -249,6 +255,8 @@ int Sorter::Partition(int low, int high)
 
 	for (int j = low; j <= high - 1; j++)
 	{
+		if (!sorting_active)
+			break;;
 		WaitTime(sorting_delay);
 		// If current element is smaller than the pivot
 		if (data[j].value < pivot)
@@ -334,6 +342,8 @@ void Sorter::CombSort()
 		// Compare all elements with current gap
 		for (int i = 0; i < n - gap; i++)
 		{
+			if (!sorting_active)
+				return;
 			if (data[i].value > data[i + gap].value)
 			{
 				WaitTime(sorting_delay);
