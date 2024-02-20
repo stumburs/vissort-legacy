@@ -9,20 +9,26 @@ public:
 	DataGenerator();
 	void Initialize(std::vector<Element>& data, std::size_t size);
 	void Randomize(std::vector<Element>& data);
+	void Ascending(std::vector<Element>& data);
+	void Descending(std::vector<Element>& data);
 	void Sin(std::vector<Element>& data);
-	void Fuzzy(std::vector<Element>& data);
-	void Reverse(std::vector<Element>& data);
+	void FuzzyAscending(std::vector<Element>& data);
+	void FuzzyDescending(std::vector<Element>& data);
+	void Random(std::vector<Element>& data);
 
-	enum ShufflingTypes
+	enum class ShufflingTypes
 	{
-		SinShuffle = 0,
-		FuzzyShuffle,
-		ReverseShuffle,
+		Ascending = 0,
+		Descending,
+		Sin,
+		FuzzyAscending,
+		FuzzyDescending,
+		Random,
 		END
 	};
 
 	void Shuffle(std::vector<Element>& data);
 	void SetActiveShuffle(ShufflingTypes type);
 	std::string ShufflingTypesToString(ShufflingTypes type);
-	ShufflingTypes active_shuffle = SinShuffle;
+	ShufflingTypes active_shuffle = ShufflingTypes::Ascending;
 };

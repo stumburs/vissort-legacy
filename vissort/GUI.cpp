@@ -168,12 +168,12 @@ std::string GUI::GenerateSortingAlgorithmDropdownOptions()
 std::string GUI::GenerateShufflingDropdownOptions()
 {
 	std::stringstream ss;
-	for (int i = 0; i < DataGenerator::ShufflingTypes::END; i++)
+	for (int i = 0; i < (int)DataGenerator::ShufflingTypes::END; i++)
 	{
 		ss << data_generator.ShufflingTypesToString(DataGenerator::ShufflingTypes(i));
 
 		// Add separators before the last entry
-		if (i < DataGenerator::ShufflingTypes::END - 1)
+		if (i < (int)DataGenerator::ShufflingTypes::END - 1)
 			ss << ';';
 	}
 	return ss.str();

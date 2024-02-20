@@ -39,7 +39,7 @@ void DataGenerator::Sin(std::vector<Element>& data)
 	}
 }
 
-void DataGenerator::Fuzzy(std::vector<Element>& data)
+void DataGenerator::FuzzyAscending(std::vector<Element>& data)
 {
 	std::size_t size = data.size();
 	data.clear();
@@ -53,14 +53,39 @@ void DataGenerator::Fuzzy(std::vector<Element>& data)
 	}
 }
 
-void DataGenerator::Reverse(std::vector<Element>& data)
+void DataGenerator::FuzzyDescending(std::vector<Element>& data)
+{
+	FuzzyAscending(data);
+	std::reverse(data.begin(), data.end());
+}
+
+void DataGenerator::Ascending(std::vector<Element>& data)
 {
 	std::size_t size = data.size();
 	data.clear();
 	for (int i = 1; i < size + 1; i++)
 	{
 		Element elem{};
-		elem.value = size - i;
+		elem.value = i;
+		elem.color = ColorFromHSV((float)i / size * 360.0f, 0.3f, 1.0f);
+		data.push_back(elem);
+	}
+}
+
+void DataGenerator::Descending(std::vector<Element>& data)
+{
+	Ascending(data);
+	std::reverse(data.begin(), data.end());
+}
+
+void DataGenerator::Random(std::vector<Element>& data)
+{
+	std::size_t size = data.size();
+	data.clear();
+	for (int i = 1; i < size + 1; i++)
+	{
+		Element elem{};
+		elem.value = rand() % size;
 		elem.color = ColorFromHSV((float)i / size * 360.0f, 0.3f, 1.0f);
 		data.push_back(elem);
 	}
@@ -68,12 +93,31 @@ void DataGenerator::Reverse(std::vector<Element>& data)
 
 void DataGenerator::Shuffle(std::vector<Element>& data)
 {
-	if (active_shuffle == DataGenerator::ShufflingTypes::SinShuffle)
+	switch (active_shuffle)
+	{
+	case DataGenerator::ShufflingTypes::Ascending:
+		Ascending(data);
+		break;
+	case DataGenerator::ShufflingTypes::Descending:
+		Descending(data);
+		break;
+	case DataGenerator::ShufflingTypes::Sin:
 		Sin(data);
-	if (active_shuffle == DataGenerator::ShufflingTypes::FuzzyShuffle)
-		Fuzzy(data);
-	if (active_shuffle == DataGenerator::ShufflingTypes::ReverseShuffle)
-		Reverse(data);
+		break;
+	case DataGenerator::ShufflingTypes::FuzzyAscending:
+		FuzzyAscending(data);
+		break;
+	case DataGenerator::ShufflingTypes::FuzzyDescending:
+		FuzzyDescending(data);
+		break;
+	case DataGenerator::ShufflingTypes::Random:
+		Random(data);
+		break;
+	case DataGenerator::ShufflingTypes::END:
+		break;
+	default:
+		break;
+	}
 }
 
 void DataGenerator::SetActiveShuffle(ShufflingTypes type)
@@ -86,14 +130,23 @@ std::string DataGenerator::ShufflingTypesToString(ShufflingTypes type)
 	std::string text;
 	switch (type)
 	{
-	case ShufflingTypes::SinShuffle:
+	case ShufflingTypes::Ascending:
+		text = "Ascending";
+		break;
+	case ShufflingTypes::Descending:
+		text = "Descending";
+		break;
+	case ShufflingTypes::Sin:
 		text = "Sin Wave";
 		break;
-	case ShufflingTypes::FuzzyShuffle:
+	case ShufflingTypes::FuzzyAscending:
 		text = "Fuzzy Asc";
 		break;
-	case ShufflingTypes::ReverseShuffle:
-		text = "Reverse";
+	case ShufflingTypes::FuzzyDescending:
+		text = "Fuzzy Desc";
+		break;
+	case ShufflingTypes::Random:
+		text = "Random";
 		break;
 	default:
 		text = "Unknown type";
