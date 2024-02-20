@@ -16,6 +16,10 @@ This program is a graphical sorting algorithm visualizer written in C++ using th
 - Adjustable sorting speed
 - Multi-threaded (done poorly)
 
+## Flagged as virus
+
+If you try downloading one of the releases, Windows Defender will probably (definitely) get rid of it. There's not much I can do at this moment. If you're worried about it being a virus, clone the repo, build it yourself, enjoy! If not, you can allow the .exe in Windows Defender and re-download it. You can even check it with VirusTotal. 
+
 ## Contributing
 
 Contributions are welcome! Feel free to open issues or submit pull requests.
