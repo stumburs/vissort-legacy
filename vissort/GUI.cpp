@@ -157,12 +157,12 @@ void GUI::DrawMenu()
 std::string GUI::GenerateSortingAlgorithmDropdownOptions()
 {
 	std::stringstream ss;
-	for (int i = 0; i < Sorter::SortingAlgorithms::END; i++)
+	for (int i = 0; i < (int)Sorter::SortingAlgorithms::END; i++)
 	{
 		ss << sorter.SortingEnumToString(Sorter::SortingAlgorithms(i));
 
 		// Add separators before the last entry
-		if (i < Sorter::SortingAlgorithms::END - 1)
+		if (i < (int)Sorter::SortingAlgorithms::END - 1)
 			ss << ';';
 	}
 	return ss.str();

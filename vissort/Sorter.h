@@ -30,15 +30,20 @@ public:
 
 	void CycleSort();
 
-	enum SortingAlgorithms
+	void Flip(int i);
+	int FindMax(int n);
+	void PancakeSort();
+
+	enum class SortingAlgorithms
 	{
-		BubbleSortEnum = 0,
-		QuickSortEnum,
-		CombSortEnum,
-		ShellSortEnum,
-		CocktailSortEnum,
-		GnomeSortEnum,
-		CycleSortEnum,
+		BubbleSort = 0,
+		QuickSort,
+		CombSort,
+		ShellSort,
+		CocktailSort,
+		GnomeSort,
+		CycleSort,
+		PancakeSort,
 		END
 	};
 
@@ -53,7 +58,7 @@ public:
 private:
 	DataGenerator& data_generator;
 	std::vector<Element> data;
-	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSortEnum;
+	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSort;
 	bool sorting_active = false;
 	std::mutex quicksort_thread_mutex;
 	std::stack<int> quick_sort_thread_depth;

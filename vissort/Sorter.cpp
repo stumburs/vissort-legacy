@@ -355,6 +355,75 @@ void Sorter::CombSort()
 	sorting_active = false;
 }
 
+// Pancake sort
+void Sorter::Flip(int i)
+{
+	Element temp;
+	int start = 0;
+	while (start < i)
+	{
+		temp = data[start];
+		data[start] = data[i];
+		data[i] = temp;
+		start++;
+		i--;
+	}
+}
+
+// Returns index of the 
+// maximum element in 
+// arr[0..n-1] 
+int Sorter::FindMax(int n)
+{
+	int mi, i;
+	for (mi = 0, i = 0; i < n; ++i)
+		if (data[i].value > data[mi].value)
+			mi = i;
+	return mi;
+}
+
+// The main function that 
+// sorts given array using 
+// flip operations 
+void Sorter::PancakeSort()
+{
+	int n = data.size();
+	// Start from the complete 
+	// array and one by one 
+	// reduce current size 
+	// by one 
+	for (int curr_size = n; curr_size > 1; --curr_size)
+	{
+		if (!sorting_active)
+			return;
+
+		// Find index of the 
+		// maximum element in 
+		// arr[0..curr_size-1] 
+		int mi = FindMax(curr_size);
+
+		// Move the maximum 
+		// element to end of 
+		// current array if 
+		// it's not already 
+		// at the end 
+		if (mi != curr_size - 1)
+		{
+			WaitTime(sorting_delay);
+			// To move at the end, 
+			// first move maximum 
+			// number to beginning 
+			Flip(mi);
+
+			// Now move the maximum 
+			// number to end by 
+			// reversing current array 
+			Flip(curr_size - 1);
+		}
+	}
+	sorting_active = false;
+}
+
 Sorter::SortingAlgorithms Sorter::GetActiveAlgorithm()
 {
 	return active_algorithm;
@@ -370,26 +439,29 @@ std::string Sorter::SortingEnumToString(SortingAlgorithms algorithm)
 	std::string text;
 	switch (algorithm)
 	{
-	case SortingAlgorithms::BubbleSortEnum:
+	case SortingAlgorithms::BubbleSort:
 		text = "Bubble Sort";
 		break;
-	case SortingAlgorithms::CocktailSortEnum:
+	case SortingAlgorithms::CocktailSort:
 		text = "Cocktail Sort";
 		break;
-	case SortingAlgorithms::CombSortEnum:
+	case SortingAlgorithms::CombSort:
 		text = "Comb Sort";
 		break;
-	case SortingAlgorithms::GnomeSortEnum:
+	case SortingAlgorithms::GnomeSort:
 		text = "Gnome Sort";
 		break;
-	case SortingAlgorithms::QuickSortEnum:
+	case SortingAlgorithms::QuickSort:
 		text = "Quick Sort";
 		break;
-	case SortingAlgorithms::ShellSortEnum:
+	case SortingAlgorithms::ShellSort:
 		text = "Shell Sort";
 		break;
-	case SortingAlgorithms::CycleSortEnum:
+	case SortingAlgorithms::CycleSort:
 		text = "Cycle Sort";
+		break;
+	case SortingAlgorithms::PancakeSort:
+		text = "Pancake Sort";
 		break;
 	default:
 		text = "Unknown algorithm";
@@ -413,20 +485,22 @@ void Sorter::StartThread()
 {
 	std::thread th;
 
-	if (active_algorithm == Sorter::SortingAlgorithms::QuickSortEnum)
+	if (active_algorithm == Sorter::SortingAlgorithms::QuickSort)
 		th = std::thread(&Sorter::QuickSort, this, 0, data.size() - 1);
-	if (active_algorithm == Sorter::SortingAlgorithms::BubbleSortEnum)
+	if (active_algorithm == Sorter::SortingAlgorithms::BubbleSort)
 		th = std::thread(&Sorter::BubbleSort, this);
-	if (active_algorithm == Sorter::SortingAlgorithms::CocktailSortEnum)
+	if (active_algorithm == Sorter::SortingAlgorithms::CocktailSort)
 		th = std::thread(&Sorter::CocktailSort, this);
-	if (active_algorithm == Sorter::SortingAlgorithms::CombSortEnum)
+	if (active_algorithm == Sorter::SortingAlgorithms::CombSort)
 		th = std::thread(&Sorter::CombSort, this);
-	if (active_algorithm == Sorter::SortingAlgorithms::GnomeSortEnum)
+	if (active_algorithm == Sorter::SortingAlgorithms::GnomeSort)
 		th = std::thread(&Sorter::GnomeSort, this);
-	if (active_algorithm == Sorter::SortingAlgorithms::ShellSortEnum)
+	if (active_algorithm == Sorter::SortingAlgorithms::ShellSort)
 		th = std::thread(&Sorter::ShellSort, this);
-	if (active_algorithm == Sorter::SortingAlgorithms::CycleSortEnum)
+	if (active_algorithm == Sorter::SortingAlgorithms::CycleSort)
 		th = std::thread(&Sorter::CycleSort, this);
+	if (active_algorithm == Sorter::SortingAlgorithms::PancakeSort)
+		th = std::thread(&Sorter::PancakeSort, this);
 
 	sorting_active = true;
 	th.detach();
