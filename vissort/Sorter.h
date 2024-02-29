@@ -13,7 +13,6 @@ public:
 	Sorter(DataGenerator& data_generator);
 	std::vector<Element>& GetData();
 
-	// Sorting algorithms
 	void BubbleSort();
 
 	int Partition(int low, int high);
@@ -47,7 +46,7 @@ public:
 		END
 	};
 
-	SortingAlgorithms GetActiveAlgorithm();
+	SortingAlgorithms GetActiveAlgorithm() const;
 	void SetActiveAlgorithm(SortingAlgorithms active_algorithm);
 	std::string SortingEnumToString(SortingAlgorithms algorithm);
 	bool GetSortingActive();

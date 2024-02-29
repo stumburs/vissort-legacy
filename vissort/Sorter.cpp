@@ -12,7 +12,6 @@ std::vector<Element>& Sorter::GetData()
 	return this->data;
 }
 
-// An optimized version of Bubble Sort
 void Sorter::BubbleSort()
 {
 	int i, j;
@@ -33,13 +32,10 @@ void Sorter::BubbleSort()
 			{
 				std::swap(data[j], data[j + 1]);
 				WaitTime(sorting_delay);
-				//return;
 				swapped = true;
 			}
 		}
 
-		// If no two elements were swapped by inner loop,
-		// then break
 		if (swapped == false)
 			break;
 	}
@@ -49,25 +45,17 @@ void Sorter::BubbleSort()
 void Sorter::ShellSort()
 {
 	int n = data.size();
-	// Start with a big gap, then reduce the gap
+
 	for (int gap = n / 2; gap > 0; gap /= 2)
 	{
-		// Do a gapped insertion sort for this gap size.
-		// The first gap elements a[0..gap-1] are already in gapped order
-		// keep adding one more element until the entire array is
-		// gap sorted 
 		for (int i = gap; i < n; i += 1)
 		{
 			// Stop execution if sorting stopped
 			if (!sorting_active)
 				return;
 
-			// add a[i] to the elements that have been gap sorted
-			// save a[i] in temp and make a hole at position i
 			Element temp = data[i];
 
-			// shift earlier gap-sorted elements up until the correct 
-			// location for a[i] is found
 			int j;
 			for (j = i; j >= gap && data[j - gap].value > temp.value; j -= gap)
 			{
@@ -75,14 +63,12 @@ void Sorter::ShellSort()
 				WaitTime(sorting_delay);
 			}
 
-			//  put temp (the original a[i]) in its correct location
 			data[j] = temp;
 		}
 	}
 	sorting_active = false;
 }
 
-// Cocktail sort
 void Sorter::CocktailSort()
 {
 	int n = data.size();
@@ -96,15 +82,11 @@ void Sorter::CocktailSort()
 		if (!sorting_active)
 			return;
 
-		// reset the swapped flag on entering
-		// the loop, because it might be true from
-		// a previous iteration.
 		swapped = false;
 
-		// loop from left to right same as
-		// the bubble sort
 		for (int i = start; i < end; ++i)
 		{
+			// Stop execution if sorting stopped
 			if (!sorting_active)
 				return;
 			if (data[i].value > data[i + 1].value)
@@ -115,22 +97,16 @@ void Sorter::CocktailSort()
 			}
 		}
 
-		// if nothing moved, then array is sorted.
 		if (!swapped)
 			break;
 
-		// otherwise, reset the swapped flag so that it
-		// can be used in the next stage
 		swapped = false;
 
-		// move the end point back by one, because
-		// item at the end is in its rightful spot
 		--end;
 
-		// from right to left, doing the
-		// same comparison as in the previous stage
 		for (int i = end - 1; i >= start; --i)
 		{
+			// Stop execution if sorting stopped
 			if (!sorting_active)
 				return;
 			if (data[i].value > data[i + 1].value)
@@ -140,16 +116,11 @@ void Sorter::CocktailSort()
 				swapped = true;
 			}
 		}
-
-		// increase the starting point, because
-		// the last stage would have moved the next
-		// smallest number to its rightful spot.
 		++start;
 	}
 	sorting_active = false;
 }
 
-// A function to sort the algorithm using gnome sort
 void Sorter::GnomeSort()
 {
 	int n = data.size();
@@ -175,43 +146,32 @@ void Sorter::GnomeSort()
 	sorting_active = false;
 }
 
-// Function sort the array using Cycle sort
 void Sorter::CycleSort()
 {
 	int n = data.size();
-	// count number of memory writes
 	int writes = 0;
 
-	// traverse array elements and put it to on
-	// the right place
 	for (int cycle_start = 0; cycle_start <= n - 2; cycle_start++)
 	{
-		// initialize item as starting point
 		Element item = data[cycle_start];
 
-		// Find position where we put the item. We basically
-		// count all smaller elements on right side of item.
 		int pos = cycle_start;
 		for (int i = cycle_start + 1; i < n; i++)
 			if (data[i].value < item.value)
 				pos++;
 
-		// If item is already in correct position
 		if (pos == cycle_start)
 			continue;
 
-		// ignore all duplicate  elements
 		while (item.value == data[pos].value)
 			pos += 1;
 
-		// put the item to it's right position
 		if (pos != cycle_start)
 		{
 			std::swap(item, data[pos]);
 			writes++;
 		}
 
-		// Rotate rest of the cycle
 		while (pos != cycle_start)
 		{
 			pos = cycle_start;
@@ -222,18 +182,15 @@ void Sorter::CycleSort()
 			if (!sorting_active)
 				return;
 
-			// Find position where we put the element
 			for (int i = cycle_start + 1; i < n; i++)
 			{
 				if (data[i].value < item.value)
 					pos += 1;
 			}
 
-			// ignore all duplicate  elements
 			while (item.value == data[pos].value)
 				pos += 1;
 
-			// put the item to it's right position
 			if (item.value != data[pos].value)
 			{
 				std::swap(item, data[pos]);
@@ -244,24 +201,22 @@ void Sorter::CycleSort()
 	sorting_active = false;
 }
 
+// Quicksort helper function
 int Sorter::Partition(int low, int high)
 {
-	// Choosing the pivot
 	int pivot = data[high].value;
 
-	// Index of smaller element and indicates
-	// the right position of pivot found so far
 	int i = (low - 1);
 
 	for (int j = low; j <= high - 1; j++)
 	{
+		// Break if sorting stopped
 		if (!sorting_active)
-			break;;
+			break;
+
 		WaitTime(sorting_delay);
-		// If current element is smaller than the pivot
 		if (data[j].value < pivot)
 		{
-			// Increment index of smaller element
 			i++;
 			std::swap(data[i], data[j]);
 		}
@@ -272,6 +227,7 @@ int Sorter::Partition(int low, int high)
 
 void Sorter::QuickSort(int low, int high)
 {
+	// Ugly mutex shenanigans
 	quicksort_thread_mutex.lock();
 	quick_sort_thread_depth.push(1);
 	quicksort_thread_mutex.unlock();
@@ -287,12 +243,8 @@ void Sorter::QuickSort(int low, int high)
 			return;
 		}
 
-		// pi is partitioning index, arr[p]
-		// is now at right place
 		int pi = Partition(low, high);
 
-		// Separately sort elements before
-		// partition and after partition
 		QuickSort(low, pi - 1);
 		QuickSort(pi + 1, high);
 	}
@@ -305,9 +257,9 @@ void Sorter::QuickSort(int low, int high)
 		sorting_active = false;
 }
 
+// Comb sort helper function
 int Sorter::GetNextGap(int gap)
 {
-	// Shrink gap by Shrink factor
 	gap = (gap * 10) / 13;
 
 	if (gap < 1)
@@ -317,31 +269,24 @@ int Sorter::GetNextGap(int gap)
 
 void Sorter::CombSort()
 {
-	// Initialize gap
 	int n = data.size();
 	int gap = n;
 
-	// Initialize swapped as true to make sure that
-	// loop runs
 	bool swapped = true;
-
-	// Keep running while gap is more than 1 and last
-	// iteration caused a swap
+	
 	while (gap != 1 || swapped == true)
 	{
+		// Stop execution if sorting stopped
 		if (!sorting_active)
 			return;
 
-		// Find next gap
 		gap = GetNextGap(gap);
 
-		// Initialize swapped as false so that we can
-		// check if swap happened or not
 		swapped = false;
 
-		// Compare all elements with current gap
 		for (int i = 0; i < n - gap; i++)
 		{
+			// Stop execution if sorting stopped
 			if (!sorting_active)
 				return;
 			if (data[i].value > data[i + gap].value)
@@ -355,7 +300,7 @@ void Sorter::CombSort()
 	sorting_active = false;
 }
 
-// Pancake sort
+// Pancake sort helper function
 void Sorter::Flip(int i)
 {
 	Element temp;
@@ -370,9 +315,7 @@ void Sorter::Flip(int i)
 	}
 }
 
-// Returns index of the 
-// maximum element in 
-// arr[0..n-1] 
+// Pancake sort helper function
 int Sorter::FindMax(int n)
 {
 	int mi, i;
@@ -382,49 +325,29 @@ int Sorter::FindMax(int n)
 	return mi;
 }
 
-// The main function that 
-// sorts given array using 
-// flip operations 
 void Sorter::PancakeSort()
 {
 	int n = data.size();
-	// Start from the complete 
-	// array and one by one 
-	// reduce current size 
-	// by one 
+	
 	for (int curr_size = n; curr_size > 1; --curr_size)
 	{
+		// Stop execution if sorting stopped
 		if (!sorting_active)
 			return;
 
-		// Find index of the 
-		// maximum element in 
-		// arr[0..curr_size-1] 
 		int mi = FindMax(curr_size);
-
-		// Move the maximum 
-		// element to end of 
-		// current array if 
-		// it's not already 
-		// at the end 
+		
 		if (mi != curr_size - 1)
 		{
 			WaitTime(sorting_delay);
-			// To move at the end, 
-			// first move maximum 
-			// number to beginning 
 			Flip(mi);
-
-			// Now move the maximum 
-			// number to end by 
-			// reversing current array 
 			Flip(curr_size - 1);
 		}
 	}
 	sorting_active = false;
 }
 
-Sorter::SortingAlgorithms Sorter::GetActiveAlgorithm()
+Sorter::SortingAlgorithms Sorter::GetActiveAlgorithm() const
 {
 	return active_algorithm;
 }
