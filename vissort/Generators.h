@@ -3,8 +3,6 @@
 #include <string>
 #include <memory>
 #include "IGenerateAlgorithm.h"
-#include "GenAscending.h"
-#include "GenRandom.h"
 
 class Generators
 {

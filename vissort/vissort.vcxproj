@@ -138,6 +138,7 @@
     <ClCompile Include="GenRandom.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="IGenerateAlgorithm.cpp" />
+    <ClCompile Include="Randomize.cpp" />
     <ClCompile Include="Sorter.cpp" />
     <ClCompile Include="vissort.cpp" />
   </ItemGroup>
@@ -149,6 +150,7 @@
     <ClInclude Include="Generators.h" />
     <ClInclude Include="GenRandom.h" />
     <ClInclude Include="IGenerateAlgorithm.h" />
+    <ClInclude Include="Randomize.h" />
     <ClInclude Include="raygui.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Sorter.h" />

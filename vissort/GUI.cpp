@@ -111,7 +111,6 @@ void GUI::DrawMenu()
 				}
 				if (GuiButton({ 20, 220, 120, 40 }, "Randomize") && !sorting_active)
 				{
-					// Todo: Implement Randomize class.
 					generators.generators["Randomize"]->Generate(sorter.GetData());
 				}
 			}
@@ -200,10 +199,19 @@ std::string GUI::GenerateGeneratorDropdownOptions()
 	bool first = true;
 	for (const auto& m : generators.generators)
 	{
+		// Don't display Randomize in the dropdown.
+		// There is probably a better solution, but it's
+		// convenient to implement it as IGenerateAlgorithm
+		if (m.first == "Randomize")
+		{
+			continue;
+		}
+
 		if (!first)
 		{
 			ss << ';';
 		}
+
 		ss << m.first;
 		first = false;
 	}
