@@ -5,12 +5,14 @@
 #include <functional>
 #include <stack>
 #include <mutex>
-#include "DataGenerator.h"
+// #include "DataGenerator.h"
 
 class Sorter
 {
 public:
-	Sorter(DataGenerator& data_generator);
+	//Sorter(DataGenerator& data_generator);
+	Sorter();
+	void InitData(size_t size);
 	std::vector<Element>& GetData();
 
 	void BubbleSort();
@@ -55,7 +57,7 @@ public:
 	void SetSortingDelay(double delay);
 
 private:
-	DataGenerator& data_generator;
+	// DataGenerator& data_generator;
 	std::vector<Element> data;
 	SortingAlgorithms active_algorithm = SortingAlgorithms::BubbleSort;
 	bool sorting_active = false;

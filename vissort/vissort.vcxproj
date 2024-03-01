@@ -133,7 +133,11 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="DataGenerator.cpp" />
+    <ClCompile Include="GenAscending.cpp" />
+    <ClCompile Include="Generators.cpp" />
+    <ClCompile Include="GenRandom.cpp" />
     <ClCompile Include="GUI.cpp" />
+    <ClCompile Include="IGenerateAlgorithm.cpp" />
     <ClCompile Include="Sorter.cpp" />
     <ClCompile Include="vissort.cpp" />
   </ItemGroup>
@@ -141,6 +145,10 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="DataGenerator.h" />
     <ClInclude Include="Element.h" />
+    <ClInclude Include="GenAscending.h" />
+    <ClInclude Include="Generators.h" />
+    <ClInclude Include="GenRandom.h" />
+    <ClInclude Include="IGenerateAlgorithm.h" />
     <ClInclude Include="raygui.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Sorter.h" />

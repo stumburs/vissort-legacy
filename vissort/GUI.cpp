@@ -5,8 +5,10 @@
 #include <thread>
 #include <iostream>
 #include <sstream>
+#include "Generators.h"
 
-GUI::GUI(Sorter& sorter, DataGenerator& data_generator) : sorter(sorter), data_generator(data_generator)
+//GUI::GUI(Sorter& sorter, DataGenerator& data_generator) : sorter(sorter), data_generator(data_generator)
+GUI::GUI(Sorter& sorter, Generators& generators) : sorter(sorter), generators(generators)
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(800, 600, "vissort");
@@ -99,17 +101,27 @@ void GUI::DrawMenu()
 
 				if (GuiButton({ 20, 170, 120, 40 }, "Apply") && !sorting_active)
 				{
-					data_generator.Initialize(sorter.GetData(), new_vec_size);
-					data_generator.Shuffle(sorter.GetData());
+					sorter.InitData(new_vec_size);
+
+					// Convert int to specific string
+					auto begin = generators.generators.begin();
+					std::advance(begin, shuffle_selected);
+					std::string selected_generator = begin->first;
+					generators.generators[selected_generator]->Generate(sorter.GetData());
 				}
 				if (GuiButton({ 20, 220, 120, 40 }, "Randomize") && !sorting_active)
-					data_generator.Randomize(sorter.GetData());
+				{
+					// Todo: Implement Randomize class.
+					generators.generators["Randomize"]->Generate(sorter.GetData());
+				}
 			}
-			// Shuffling Dropdown
-			if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateShufflingDropdownOptions().c_str(), &shuffle_selected, shuffle_dropdown_edit))
+			// Data generator dropdown
+			//if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateShufflingDropdownOptions().c_str(), &shuffle_selected, shuffle_dropdown_edit))
+			if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateGeneratorDropdownOptions().c_str(), &shuffle_selected, shuffle_dropdown_edit))
 			{
 				shuffle_dropdown_edit = !shuffle_dropdown_edit;
-				data_generator.SetActiveShuffle(DataGenerator::ShufflingTypes(shuffle_selected));
+				auto begin = generators.generators.begin();
+				std::advance(begin, shuffle_selected);
 			}
 
 			// Column 2
@@ -168,16 +180,32 @@ std::string GUI::GenerateSortingAlgorithmDropdownOptions()
 	return ss.str();
 }
 
-std::string GUI::GenerateShufflingDropdownOptions()
+//std::string GUI::GenerateShufflingDropdownOptions()
+//{
+//	std::stringstream ss;
+//	for (int i = 0; i < (int)DataGenerator::ShufflingTypes::END; i++)
+//	{
+//		ss << data_generator.ShufflingTypesToString(DataGenerator::ShufflingTypes(i));
+//
+//		// Add separators before the last entry
+//		if (i < (int)DataGenerator::ShufflingTypes::END - 1)
+//			ss << ';';
+//	}
+//	return ss.str();
+//}
+
+std::string GUI::GenerateGeneratorDropdownOptions()
 {
 	std::stringstream ss;
-	for (int i = 0; i < (int)DataGenerator::ShufflingTypes::END; i++)
+	bool first = true;
+	for (const auto& m : generators.generators)
 	{
-		ss << data_generator.ShufflingTypesToString(DataGenerator::ShufflingTypes(i));
-
-		// Add separators before the last entry
-		if (i < (int)DataGenerator::ShufflingTypes::END - 1)
+		if (!first)
+		{
 			ss << ';';
+		}
+		ss << m.first;
+		first = false;
 	}
 	return ss.str();
 }

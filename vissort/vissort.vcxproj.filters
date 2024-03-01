@@ -30,6 +30,18 @@
     <ClCompile Include="Sorter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="IGenerateAlgorithm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GenAscending.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Generators.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GenRandom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="raygui.h">
@@ -48,6 +60,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sorter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IGenerateAlgorithm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GenAscending.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Generators.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GenRandom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

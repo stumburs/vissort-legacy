@@ -2,10 +2,24 @@
 #include <thread>
 #include <stdexcept>
 
-Sorter::Sorter(DataGenerator& data_generator) : data_generator(data_generator)
+//Sorter::Sorter(DataGenerator& data_generator) : data_generator(data_generator)
+Sorter::Sorter()
 {
-	data_generator.Initialize(data, 100);
+	InitData(100);
+	//data_generator.Initialize(data, 100);
 };
+
+void Sorter::InitData(size_t size)
+{
+	data.clear();
+	for (int i = 1; i < size + 1; i++)
+	{
+		Element elem{};
+		elem.value = i;
+		elem.color = ColorFromHSV((float)i / size * 360.0f, 0.3f, 1.0f);
+		data.push_back(elem);
+	}
+}
 
 std::vector<Element>& Sorter::GetData()
 {
@@ -273,7 +287,7 @@ void Sorter::CombSort()
 	int gap = n;
 
 	bool swapped = true;
-	
+
 	while (gap != 1 || swapped == true)
 	{
 		// Stop execution if sorting stopped
@@ -328,7 +342,7 @@ int Sorter::FindMax(int n)
 void Sorter::PancakeSort()
 {
 	int n = data.size();
-	
+
 	for (int curr_size = n; curr_size > 1; --curr_size)
 	{
 		// Stop execution if sorting stopped
@@ -336,7 +350,7 @@ void Sorter::PancakeSort()
 			return;
 
 		int mi = FindMax(curr_size);
-		
+
 		if (mi != curr_size - 1)
 		{
 			WaitTime(sorting_delay);
