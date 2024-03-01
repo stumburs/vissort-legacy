@@ -2,11 +2,9 @@
 #include <thread>
 #include <stdexcept>
 
-//Sorter::Sorter(DataGenerator& data_generator) : data_generator(data_generator)
 Sorter::Sorter()
 {
 	InitData(100);
-	//data_generator.Initialize(data, 100);
 };
 
 void Sorter::InitData(size_t size)

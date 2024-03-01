@@ -7,7 +7,6 @@
 #include <sstream>
 #include "Generators.h"
 
-//GUI::GUI(Sorter& sorter, DataGenerator& data_generator) : sorter(sorter), data_generator(data_generator)
 GUI::GUI(Sorter& sorter, Generators& generators) : sorter(sorter), generators(generators)
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -106,21 +105,25 @@ void GUI::DrawMenu()
 					// Convert int to specific string
 					auto begin = generators.generators.begin();
 					std::advance(begin, shuffle_selected);
-					std::string selected_generator = begin->first;
-					generators.generators[selected_generator]->Generate(sorter.GetData());
+
+					// Janky workaround for std::map sorting keys alphabetically
+					if (begin->first == "Randomize")
+					{
+						begin = std::next(begin);
+					}
+					
+					generators.generators[begin->first]->Generate(sorter.GetData());
 				}
+
 				if (GuiButton({ 20, 220, 120, 40 }, "Randomize") && !sorting_active)
 				{
 					generators.generators["Randomize"]->Generate(sorter.GetData());
 				}
 			}
 			// Data generator dropdown
-			//if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateShufflingDropdownOptions().c_str(), &shuffle_selected, shuffle_dropdown_edit))
 			if (GuiDropdownBox({ 20, 70, 200, 40 }, GenerateGeneratorDropdownOptions().c_str(), &shuffle_selected, shuffle_dropdown_edit))
 			{
 				shuffle_dropdown_edit = !shuffle_dropdown_edit;
-				auto begin = generators.generators.begin();
-				std::advance(begin, shuffle_selected);
 			}
 
 			// Column 2
@@ -178,20 +181,6 @@ std::string GUI::GenerateSortingAlgorithmDropdownOptions()
 	}
 	return ss.str();
 }
-
-//std::string GUI::GenerateShufflingDropdownOptions()
-//{
-//	std::stringstream ss;
-//	for (int i = 0; i < (int)DataGenerator::ShufflingTypes::END; i++)
-//	{
-//		ss << data_generator.ShufflingTypesToString(DataGenerator::ShufflingTypes(i));
-//
-//		// Add separators before the last entry
-//		if (i < (int)DataGenerator::ShufflingTypes::END - 1)
-//			ss << ';';
-//	}
-//	return ss.str();
-//}
 
 std::string GUI::GenerateGeneratorDropdownOptions()
 {

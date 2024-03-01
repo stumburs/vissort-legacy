@@ -2,24 +2,20 @@
 #include <vector>
 #include "Element.h"
 #include "Sorter.h"
-#include "DataGenerator.h"
 #include "Generators.h"
 
 class GUI
 {
 public:
 	GUI(Sorter& sorter, Generators& generators);
-	//GUI(Sorter& sorter, DataGenerator& data_generator);
 	void Render();
 private:
 	Sorter& sorter;
 	Generators& generators;
-	//DataGenerator& data_generator;
 
 	void DrawData(const std::vector<Element>& vec);
 	void DrawMenu();
 	std::string GenerateSortingAlgorithmDropdownOptions();
-	//std::string GenerateShufflingDropdownOptions();
 	std::string GenerateGeneratorDropdownOptions();
 
 	bool settings_open = false;

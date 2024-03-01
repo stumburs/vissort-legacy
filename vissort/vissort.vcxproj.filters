@@ -45,6 +45,12 @@
     <ClCompile Include="Randomize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GenDescending.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GenSin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="raygui.h">
@@ -78,6 +84,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Randomize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GenDescending.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GenSin.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
