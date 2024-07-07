@@ -265,7 +265,7 @@ void Sorter::QuickSort(int low, int high)
 	quick_sort_thread_depth.pop();
 	quicksort_thread_mutex.unlock();
 
-	if (quick_sort_thread_depth.size() == 0)
+	if (quick_sort_thread_depth.empty())
 		sorting_active = false;
 }
 
