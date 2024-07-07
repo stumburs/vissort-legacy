@@ -24,9 +24,6 @@
     <ClCompile Include="GUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DataGenerator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Sorter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Element.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DataGenerator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Sorter.h">

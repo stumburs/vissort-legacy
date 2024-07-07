@@ -132,7 +132,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
-    <ClCompile Include="DataGenerator.cpp" />
     <ClCompile Include="GenAscending.cpp" />
     <ClCompile Include="GenDescending.cpp" />
     <ClCompile Include="Generators.cpp" />
@@ -146,7 +145,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
-    <ClInclude Include="DataGenerator.h" />
     <ClInclude Include="Element.h" />
     <ClInclude Include="GenAscending.h" />
     <ClInclude Include="GenDescending.h" />
