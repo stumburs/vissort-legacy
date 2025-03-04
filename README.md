@@ -2,7 +2,7 @@
 
 This program is a graphical sorting algorithm visualizer written in C++ using the Raylib library. It provides an interactive way to visualize various sorting algorithms in action.
 
-![img1](https://github.com/stumburs/vissort/assets/70687973/70f9e4a3-950c-4abf-aee8-f729749d6b96)
+![img1](https://github.com/stumburs/vissort-legacy/assets/70687973/70f9e4a3-950c-4abf-aee8-f729749d6b96)
 
 ## Features
 
